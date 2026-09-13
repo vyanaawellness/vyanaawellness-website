@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Link from "next/link";
@@ -35,15 +36,26 @@ export default function AboutPage() {
 
         <section className="bg-white py-24">
           <div className="mx-auto grid max-w-7xl gap-16 px-6 lg:grid-cols-2 lg:px-8">
-            <div className="flex min-h-[520px] items-end rounded-[3rem] bg-vyana-sage/40 p-8">
-              <div className="rounded-2xl bg-white/90 p-6">
-                <p className="font-serif text-2xl text-vyana-dark">
-                  Dr. Bhoomi Panchal
-                </p>
+            <div className="relative min-h-[520px] overflow-hidden rounded-[3rem]">
+              <Image
+                src="/images/dr-bhoomi.jpeg"
+                alt="Dr. Bhoomi Panchal"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority
+              />
 
-                <p className="mt-2 text-sm text-vyana-green">
-                  BNYS · Bachelor of Naturopathy and Yogic Sciences
-                </p>
+              <div className="absolute inset-x-0 bottom-0 p-8">
+                <div className="max-w-md rounded-2xl bg-white/90 p-6 backdrop-blur-sm">
+                  <p className="font-serif text-2xl text-vyana-dark">
+                    Dr. Bhoomi Panchal
+                  </p>
+
+                  <p className="mt-2 text-sm text-vyana-green">
+                    BNYS · Bachelor of Naturopathy and Yogic Sciences
+                  </p>
+                </div>
               </div>
             </div>
 
