@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import ContactForm from "../components/ContactForm";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -134,140 +135,7 @@ export default function ContactPage() {
                 form.
               </p>
 
-              <form className="mt-8 space-y-6">
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div>
-                    <label
-                      htmlFor="name"
-                      className="mb-2 block text-sm font-medium text-vyana-dark"
-                    >
-                      Full Name
-                    </label>
-
-                    <input
-                      id="name"
-                      name="name"
-                      type="text"
-                      autoComplete="name"
-                      required
-                      placeholder="Your name"
-                      className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-vyana-dark outline-none transition placeholder:text-gray-400 focus:border-vyana-green"
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="mb-2 block text-sm font-medium text-vyana-dark"
-                    >
-                      Email
-                    </label>
-
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      autoComplete="email"
-                      required
-                      placeholder="you@example.com"
-                      className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-vyana-dark outline-none transition placeholder:text-gray-400 focus:border-vyana-green"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div>
-                    <label
-                      htmlFor="phone"
-                      className="mb-2 block text-sm font-medium text-vyana-dark"
-                    >
-                      Phone
-                      <span className="ml-1 text-gray-400">(optional)</span>
-                    </label>
-
-                    <input
-                      id="phone"
-                      name="phone"
-                      type="tel"
-                      autoComplete="tel"
-                      placeholder="Your phone number"
-                      className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-vyana-dark outline-none transition placeholder:text-gray-400 focus:border-vyana-green"
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="reason"
-                      className="mb-2 block text-sm font-medium text-vyana-dark"
-                    >
-                      Reason for Contact
-                    </label>
-
-                    <select
-                      id="reason"
-                      name="reason"
-                      required
-                      defaultValue=""
-                      className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-vyana-dark outline-none transition focus:border-vyana-green"
-                    >
-                      <option value="" disabled>
-                        Select a reason
-                      </option>
-
-                      <option value="consultation">
-                        Consultation question
-                      </option>
-
-                      <option value="services">Services</option>
-
-                      <option value="booking">Booking support</option>
-
-                      <option value="collaboration">
-                        Collaboration / partnership
-                      </option>
-
-                      <option value="general">General enquiry</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="message"
-                    className="mb-2 block text-sm font-medium text-vyana-dark"
-                  >
-                    Message
-                  </label>
-
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={6}
-                    required
-                    placeholder="How can VYANA Wellness help you?"
-                    className="w-full resize-none rounded-2xl border border-gray-200 bg-white px-4 py-3 text-vyana-dark outline-none transition placeholder:text-gray-400 focus:border-vyana-green"
-                  />
-                </div>
-
-                <div className="rounded-2xl bg-white p-4">
-                  <p className="text-xs leading-5 text-gray-500">
-                    By submitting this form, you understand that this contact
-                    form is for general enquiries and is not intended for
-                    emergency medical concerns.
-                  </p>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full rounded-full bg-vyana-green px-8 py-4 text-sm font-semibold text-white transition hover:opacity-90"
-                >
-                  Send Message
-                </button>
-              </form>
-
-              <p className="mt-5 text-center text-xs text-gray-500">
-                Form submission will be activated before the website goes live.
-              </p>
+              <ContactForm />
             </div>
           </div>
         </section>
