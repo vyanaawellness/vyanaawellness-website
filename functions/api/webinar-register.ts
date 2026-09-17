@@ -2,10 +2,16 @@
  * VYANA Wellness — Navratri Webinar Registration
  *
  * Cloudflare Pages Function
- * Endpoint: POST /api/webinar-register
+ *
+ * POST /api/webinar-register
+ *   Saves registration and sends confirmation emails.
+ *
+ * GET /api/webinar-register?calendar=ics
+ *   Downloads a calendar event compatible with Apple Calendar,
+ *   Outlook, and other calendar applications.
  *
  * Required Cloudflare bindings:
- * DB                 D1 database binding
+ * DB                 D1 database
  * RESEND_API_KEY     Secret
  * RESEND_FROM_EMAIL  Text variable
  */
@@ -49,15 +55,44 @@ type Registration = {
   marketingConsent: boolean;
 };
 
+/* =========================================================
+   WEBINAR CONFIGURATION
+
+   Duration is provisional.
+   Change the end time once the duration is confirmed.
+   ========================================================= */
+
 const WEBINAR_ID = "navratri-2026";
 
-const NOTIFICATION_EMAIL = "info@vyanaawellness.com";
+const WEBINAR_TITLE =
+  "VYANA Wellness - Therapeutic Fasting During Navratri";
+
+const WEBINAR_DATE_LABEL =
+  "Sunday, 4 October 2026";
+
+const WEBINAR_TIME_LABEL =
+  "6:00 PM IST";
+
+const WEBINAR_DURATION_LABEL =
+  "Approximately 60 minutes (provisional)";
+
+// UTC equivalent of October 4, 2026, 6:00 PM IST.
+const WEBINAR_START_UTC = "2026-10-04T12:30:00Z";
+
+// Provisional end: October 4, 2026, 7:00 PM IST.
+const WEBINAR_END_UTC = "2026-10-04T13:30:00Z";
+
+const WEBSITE_URL = "https://vyanaawellness.com";
+
+const NOTIFICATION_EMAIL =
+  "info@vyanaawellness.com";
 
 const MAX_REQUEST_LENGTH = 30000;
 
-/**
- * Return JSON consistently, including for errors.
- */
+/* =========================================================
+   JSON RESPONSE
+   ========================================================= */
+
 function json(
   body: Record<string, unknown>,
   status = 200
@@ -71,23 +106,19 @@ function json(
   });
 }
 
-/**
- * Normalize and limit user-provided text.
- */
+/* =========================================================
+   INPUT HELPERS
+   ========================================================= */
+
 function cleanText(
   value: unknown,
   maxLength: number
 ): string {
-  if (typeof value !== "string") {
-    return "";
-  }
-
-  return value.trim().slice(0, maxLength);
+  return typeof value === "string"
+    ? value.trim().slice(0, maxLength)
+    : "";
 }
 
-/**
- * Normalize checkbox values.
- */
 function cleanArray(value: unknown): string[] {
   if (!Array.isArray(value)) {
     return [];
@@ -103,9 +134,6 @@ function cleanArray(value: unknown): string[] {
     .slice(0, 30);
 }
 
-/**
- * Convert incoming JSON to a controlled registration object.
- */
 function parseRegistration(
   input: Record<string, unknown>
 ): Registration {
@@ -134,7 +162,9 @@ function parseRegistration(
       100
     ),
 
-    fastingSymptoms: cleanArray(input.fastingSymptoms),
+    fastingSymptoms: cleanArray(
+      input.fastingSymptoms
+    ),
 
     learningInterests: cleanArray(
       input.learningInterests
@@ -158,16 +188,10 @@ function parseRegistration(
   };
 }
 
-/**
- * Basic email format validation.
- */
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-/**
- * Escape user input before inserting it into HTML emails.
- */
 function escapeHtml(value: string): string {
   const replacements: Record<string, string> = {
     "&": "&amp;",
@@ -183,12 +207,204 @@ function escapeHtml(value: string): string {
   );
 }
 
+/* =========================================================
+   CALENDAR HELPERS
+   ========================================================= */
+
+function compactUtc(value: string): string {
+  return value.replace(/[-:]/g, "").replace(".000", "");
+}
+
+function createGoogleCalendarUrl(): string {
+  const parameters = new URLSearchParams({
+    action: "TEMPLATE",
+
+    text: WEBINAR_TITLE,
+
+    dates:
+      `${compactUtc(WEBINAR_START_UTC)}/` +
+      compactUtc(WEBINAR_END_UTC),
+
+    details:
+      "Thank you for registering for the VYANA Wellness webinar. " +
+      "The end time is provisional. " +
+      "Joining instructions and any schedule updates " +
+      "will be shared before the event.",
+
+    location: "Online - joining link to be shared",
+  });
+
+  return (
+    "https://calendar.google.com/calendar/render?" +
+    parameters.toString()
+  );
+}
+
+function createOutlookCalendarUrl(): string {
+  const parameters = new URLSearchParams({
+    path: "/calendar/action/compose",
+
+    rru: "addevent",
+
+    subject: WEBINAR_TITLE,
+
+    startdt: WEBINAR_START_UTC,
+
+    enddt: WEBINAR_END_UTC,
+
+    body:
+      "Thank you for registering for the VYANA Wellness webinar. " +
+      "The end time is provisional. " +
+      "Joining instructions and any schedule updates " +
+      "will be shared before the event.",
+
+    location: "Online - joining link to be shared",
+  });
+
+  return (
+    "https://outlook.live.com/calendar/0/deeplink/compose?" +
+    parameters.toString()
+  );
+}
+
+function createIcsUrl(): string {
+  return `${WEBSITE_URL}/api/webinar-register?calendar=ics`;
+}
+
+function escapeIcsText(value: string): string {
+  return value
+    .replace(/\\/g, "\\\\")
+    .replace(/\r?\n/g, "\\n")
+    .replace(/,/g, "\\,")
+    .replace(/;/g, "\\;");
+}
+
 /**
- * Send an email through Resend.
- *
- * A successful API response means Resend accepted the
- * request; it does not guarantee inbox delivery.
+ * Fold long iCalendar lines at UTF-8 byte boundaries.
+ * Continuation lines begin with one space.
  */
+function foldIcsLine(line: string): string {
+  const encoder = new TextEncoder();
+
+  const output: string[] = [];
+
+  let current = "";
+
+  let currentBytes = 0;
+
+  for (const character of line) {
+    const characterBytes =
+      encoder.encode(character).length;
+
+    const limit = output.length === 0 ? 75 : 74;
+
+    if (
+      currentBytes + characterBytes > limit &&
+      current.length > 0
+    ) {
+      output.push(current);
+
+      current = character;
+
+      currentBytes = characterBytes;
+    } else {
+      current += character;
+
+      currentBytes += characterBytes;
+    }
+  }
+
+  output.push(current);
+
+  return output.join("\r\n ");
+}
+
+function createIcsContent(): string {
+  const description =
+    "VYANA Wellness webinar. " +
+    "The end time is provisional. " +
+    "Joining instructions and any schedule updates " +
+    "will be shared before the event.";
+
+  const lines = [
+    "BEGIN:VCALENDAR",
+
+    "VERSION:2.0",
+
+    "PRODID:-//VYANA Wellness//Webinar Calendar//EN",
+
+    "CALSCALE:GREGORIAN",
+
+    "METHOD:PUBLISH",
+
+    "BEGIN:VEVENT",
+
+    "UID:navratri-2026@vyanaawellness.com",
+
+    "DTSTAMP:20260917T000000Z",
+
+    `DTSTART:${compactUtc(WEBINAR_START_UTC)}`,
+
+    `DTEND:${compactUtc(WEBINAR_END_UTC)}`,
+
+    `SUMMARY:${escapeIcsText(WEBINAR_TITLE)}`,
+
+    `DESCRIPTION:${escapeIcsText(description)}`,
+
+    "LOCATION:Online - joining link to be shared",
+
+    "STATUS:CONFIRMED",
+
+    "END:VEVENT",
+
+    "END:VCALENDAR",
+  ];
+
+  return (
+    lines.map(foldIcsLine).join("\r\n") +
+    "\r\n"
+  );
+}
+
+/* =========================================================
+   GET HANDLER — DOWNLOAD .ICS CALENDAR FILE
+   ========================================================= */
+
+export async function onRequestGet({
+  request,
+}: PagesContext): Promise<Response> {
+  const url = new URL(request.url);
+
+  if (url.searchParams.get("calendar") !== "ics") {
+    return json(
+      {
+        success: false,
+        error: "Calendar resource not found.",
+      },
+      404
+    );
+  }
+
+  return new Response(createIcsContent(), {
+    status: 200,
+
+    headers: {
+      "Content-Type":
+        "text/calendar; charset=utf-8",
+
+      "Content-Disposition":
+        'attachment; filename="vyana-navratri-webinar.ics"',
+
+      "Cache-Control":
+        "public, max-age=300",
+    },
+  });
+}
+
+/* =========================================================
+   RESEND EMAIL HELPER
+   ========================================================= */
+
 async function sendEmail(
   apiKey: string,
   from: string,
@@ -203,13 +419,17 @@ async function sendEmail(
 
       headers: {
         Authorization: `Bearer ${apiKey}`,
+
         "Content-Type": "application/json",
       },
 
       body: JSON.stringify({
         from,
+
         to: [to],
+
         subject,
+
         html,
       }),
     }
@@ -219,7 +439,7 @@ async function sendEmail(
     const errorBody = await response.text();
 
     console.error(
-      "Resend email request failed:",
+      "Resend request failed:",
       response.status,
       errorBody
     );
@@ -230,20 +450,19 @@ async function sendEmail(
   }
 }
 
-/**
- * Main Cloudflare Pages POST handler.
- */
+/* =========================================================
+   POST HANDLER — WEBINAR REGISTRATION
+   ========================================================= */
+
 export async function onRequestPost({
   request,
   env,
 }: PagesContext): Promise<Response> {
   try {
-    // -----------------------------------------
-    // 1. Verify Cloudflare configuration
-    // -----------------------------------------
+    /* 1. Check configuration */
 
     if (!env.DB) {
-      console.error("Missing D1 database binding: DB");
+      console.error("Missing D1 binding: DB");
 
       return json(
         {
@@ -273,9 +492,7 @@ export async function onRequestPost({
       );
     }
 
-    // -----------------------------------------
-    // 2. Validate request format
-    // -----------------------------------------
+    /* 2. Validate request format */
 
     const contentType =
       request.headers.get("content-type") || "";
@@ -301,15 +518,13 @@ export async function onRequestPost({
         {
           success: false,
           error:
-            "Registration data exceeds the allowed size.",
+            "Registration data is too large.",
         },
         413
       );
     }
 
-    // -----------------------------------------
-    // 3. Parse JSON safely
-    // -----------------------------------------
+    /* 3. Parse JSON */
 
     let input: unknown;
 
@@ -343,9 +558,7 @@ export async function onRequestPost({
       input as Record<string, unknown>
     );
 
-    // -----------------------------------------
-    // 4. Validate required fields
-    // -----------------------------------------
+    /* 4. Validate required fields */
 
     if (
       !registration.name ||
@@ -367,17 +580,11 @@ export async function onRequestPost({
       );
     }
 
-    // -----------------------------------------
-    // 5. Generate registration details
-    // -----------------------------------------
+    /* 5. Save registration */
 
     const registrationId = crypto.randomUUID();
 
     const createdAt = new Date().toISOString();
-
-    // -----------------------------------------
-    // 6. Save registration to Cloudflare D1
-    // -----------------------------------------
 
     await env.DB.prepare(
       `INSERT INTO webinar_registrations (
@@ -407,30 +614,52 @@ export async function onRequestPost({
     )
       .bind(
         registrationId,
+
         WEBINAR_ID,
+
         registration.name,
+
         registration.whatsapp,
+
         registration.email,
+
         registration.cityState,
+
         registration.ageGroup,
+
         registration.gender,
+
         registration.fastingExperience,
-        JSON.stringify(registration.primaryGoals),
+
+        JSON.stringify(
+          registration.primaryGoals
+        ),
+
         registration.fastingPattern,
-        JSON.stringify(registration.fastingSymptoms),
-        JSON.stringify(registration.learningInterests),
+
+        JSON.stringify(
+          registration.fastingSymptoms
+        ),
+
+        JSON.stringify(
+          registration.learningInterests
+        ),
+
         registration.question,
+
         registration.referralSource,
+
         registration.educationalConsent ? 1 : 0,
+
         registration.webinarUpdatesConsent ? 1 : 0,
+
         registration.marketingConsent ? 1 : 0,
+
         createdAt
       )
       .run();
 
-    // -----------------------------------------
-    // 7. Prepare safe HTML values
-    // -----------------------------------------
+    /* 6. Escape email content */
 
     const safeName = escapeHtml(
       registration.name
@@ -457,17 +686,26 @@ export async function onRequestPost({
         .map(escapeHtml)
         .join(", ");
 
-    // -----------------------------------------
-    // 8. Prepare admin notification
-    // -----------------------------------------
+    /* 7. Calendar links */
+
+    const googleCalendarUrl =
+      createGoogleCalendarUrl();
+
+    const outlookCalendarUrl =
+      createOutlookCalendarUrl();
+
+    const icsCalendarUrl =
+      createIcsUrl();
+
+    /* 8. Admin notification email */
 
     const notificationHtml = `
       <div style="
-        font-family: Arial, sans-serif;
-        max-width: 650px;
-        margin: auto;
-        color: #234D36;
-        line-height: 1.7;
+        font-family:Arial,sans-serif;
+        max-width:650px;
+        margin:auto;
+        color:#234D36;
+        line-height:1.7;
       ">
         <h1>New VYANA Webinar Registration</h1>
 
@@ -516,48 +754,44 @@ export async function onRequestPost({
         <hr>
 
         <p>
-          The complete registration is stored
-          in your Cloudflare D1 database.
-        </p>
-
-        <p>
-          <strong>Webinar:</strong>
-          Sunday, 4 October 2026
-          at 6:00 PM IST.
+          The complete registration has been saved
+          in Cloudflare D1.
         </p>
       </div>
     `;
 
-    // -----------------------------------------
-    // 9. Prepare attendee confirmation
-    // -----------------------------------------
+    /* 9. Attendee confirmation email */
 
     const confirmationHtml = `
       <div style="
-        font-family: Arial, sans-serif;
-        max-width: 650px;
-        margin: auto;
-        color: #234D36;
-        line-height: 1.8;
+        font-family:Arial,sans-serif;
+        max-width:650px;
+        margin:auto;
+        padding:24px;
+        color:#234D36;
+        line-height:1.8;
       ">
 
         <h1 style="
-          color: #234D36;
-          font-size: 30px;
+          color:#234D36;
+          font-size:30px;
+          margin-bottom:4px;
         ">
           VYANA Wellness
         </h1>
 
         <p style="
-          color: #4F7942;
-          font-size: 14px;
+          color:#4F7942;
+          font-size:14px;
+          margin-top:0;
         ">
           Restore Your Inner Rhythm
         </p>
 
         <hr style="
-          border: none;
-          border-top: 1px solid #DDE8D9;
+          border:none;
+          border-top:1px solid #DDE8D9;
+          margin:24px 0;
         ">
 
         <p>Dear ${safeName},</p>
@@ -567,32 +801,164 @@ export async function onRequestPost({
           upcoming webinar!
         </p>
 
-        <h2 style="color: #234D36;">
+        <h2 style="
+          color:#234D36;
+          font-size:24px;
+        ">
           Therapeutic Fasting During Navratri
         </h2>
 
-        <p>
-          <strong>Date:</strong>
-          Sunday, 4 October 2026
-          <br>
+        <div style="
+          background:#F7F4ED;
+          border:1px solid #DDE8D9;
+          border-radius:12px;
+          padding:20px;
+          margin:24px 0;
+        ">
 
-          <strong>Time:</strong>
-          6:00 PM IST
-          <br>
+          <p style="margin:0 0 8px;">
+            <strong>Date:</strong>
+            ${WEBINAR_DATE_LABEL}
+          </p>
 
-          <strong>Format:</strong>
-          Online Webinar
-        </p>
+          <p style="margin:0 0 8px;">
+            <strong>Time:</strong>
+            ${WEBINAR_TIME_LABEL}
+          </p>
+
+          <p style="margin:0 0 8px;">
+            <strong>Duration:</strong>
+            ${WEBINAR_DURATION_LABEL}
+          </p>
+
+          <p style="margin:0;">
+            <strong>Format:</strong>
+            Online Webinar
+          </p>
+
+        </div>
 
         <p>
           Your registration has been received.
-          We look forward to having you join us.
+          We look forward to having you join us!
         </p>
 
         <p>
-          Webinar joining instructions will be
-          shared before the event.
+          Joining instructions will be shared
+          before the webinar.
         </p>
+
+        <hr style="
+          border:none;
+          border-top:1px solid #DDE8D9;
+          margin:30px 0;
+        ">
+
+        <h2 style="
+          color:#234D36;
+          font-size:22px;
+          text-align:center;
+        ">
+          Save the Date
+        </h2>
+
+        <p style="text-align:center;">
+          Add this webinar to your personal
+          calendar so you don't miss it.
+        </p>
+
+        <table
+          role="presentation"
+          cellpadding="0"
+          cellspacing="0"
+          border="0"
+          width="100%"
+          style="margin:24px 0;"
+        >
+          <tr>
+            <td align="center" style="padding:6px;">
+
+              <a
+                href="${escapeHtml(googleCalendarUrl)}"
+                style="
+                  display:inline-block;
+                  background:#234D36;
+                  color:#FFFFFF;
+                  padding:13px 22px;
+                  border-radius:8px;
+                  text-decoration:none;
+                  font-size:14px;
+                  font-weight:bold;
+                "
+              >
+                Add to Google Calendar
+              </a>
+
+            </td>
+          </tr>
+
+          <tr>
+            <td align="center" style="padding:6px;">
+
+              <a
+                href="${escapeHtml(outlookCalendarUrl)}"
+                style="
+                  display:inline-block;
+                  background:#4F7942;
+                  color:#FFFFFF;
+                  padding:13px 22px;
+                  border-radius:8px;
+                  text-decoration:none;
+                  font-size:14px;
+                  font-weight:bold;
+                "
+              >
+                Add to Outlook Calendar
+              </a>
+
+            </td>
+          </tr>
+
+          <tr>
+            <td align="center" style="padding:6px;">
+
+              <a
+                href="${escapeHtml(icsCalendarUrl)}"
+                style="
+                  display:inline-block;
+                  background:#F7F4ED;
+                  color:#234D36;
+                  border:1px solid #A8C3A0;
+                  padding:13px 22px;
+                  border-radius:8px;
+                  text-decoration:none;
+                  font-size:14px;
+                  font-weight:bold;
+                "
+              >
+                Apple Calendar / Download .ics
+              </a>
+
+            </td>
+          </tr>
+        </table>
+
+        <p style="
+          color:#666666;
+          font-size:12px;
+          text-align:center;
+        ">
+          Calendar events currently reserve
+          6:00–7:00 PM IST as a provisional
+          time slot. The final duration and
+          joining link will be shared later.
+        </p>
+
+        <hr style="
+          border:none;
+          border-top:1px solid #DDE8D9;
+          margin:30px 0;
+        ">
 
         <p>
           Warm regards,
@@ -606,41 +972,42 @@ export async function onRequestPost({
           VYANA Wellness
         </p>
 
-        <hr style="
-          border: none;
-          border-top: 1px solid #DDE8D9;
-        ">
-
         <p style="
-          font-size: 12px;
-          color: #666666;
+          color:#666666;
+          font-size:12px;
         ">
-          This webinar is educational and does
-          not replace individualized medical
-          advice.
+          This webinar is educational and
+          does not replace individualized
+          medical advice.
         </p>
 
       </div>
     `;
 
-    // -----------------------------------------
-    // 10. Send both emails
-    // -----------------------------------------
+    /* 10. Send both emails */
 
     const emailResults = await Promise.allSettled([
       sendEmail(
         env.RESEND_API_KEY,
+
         env.RESEND_FROM_EMAIL,
+
         NOTIFICATION_EMAIL,
+
         `New Webinar Registration: ${registration.name}`,
+
         notificationHtml
       ),
 
       sendEmail(
         env.RESEND_API_KEY,
+
         env.RESEND_FROM_EMAIL,
+
         registration.email,
+
         "Your VYANA Navratri Webinar Registration",
+
         confirmationHtml
       ),
     ]);
@@ -655,9 +1022,7 @@ export async function onRequestPost({
         ? "sent"
         : "failed";
 
-    // -----------------------------------------
-    // 11. Update email statuses in D1
-    // -----------------------------------------
+    /* 11. Update email statuses */
 
     try {
       await env.DB.prepare(
@@ -668,34 +1033,37 @@ export async function onRequestPost({
       )
         .bind(
           notificationStatus,
+
           confirmationStatus,
+
           registrationId
         )
         .run();
     } catch (error) {
       console.error(
-        "Failed to update registration email statuses:",
+        "Failed to update email statuses:",
         error
       );
     }
 
-    // -----------------------------------------
-    // 12. Return result to the website
-    // -----------------------------------------
+    /* 12. Return registration result */
 
     if (
       notificationStatus === "failed" ||
       confirmationStatus === "failed"
     ) {
       console.error(
-        "Registration saved but one or more emails failed:",
+        "Registration saved, but email sending failed:",
         registrationId
       );
 
       return json({
         success: true,
+
         registrationId,
+
         emailStatus: "partial_failure",
+
         message:
           "Registration saved. Some emails could not be sent.",
       });
@@ -703,8 +1071,11 @@ export async function onRequestPost({
 
     return json({
       success: true,
+
       registrationId,
+
       emailStatus: "sent",
+
       message:
         "Registration completed successfully.",
     });
@@ -717,6 +1088,7 @@ export async function onRequestPost({
     return json(
       {
         success: false,
+
         error:
           "We could not complete your registration. Please try again later.",
       },
