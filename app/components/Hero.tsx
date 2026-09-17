@@ -1,11 +1,13 @@
 export default function Hero() {
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden bg-vyana-cream">
+    <section className="relative flex items-center overflow-hidden bg-vyana-cream">
       {/* Decorative background */}
-      <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-vyana-sage/30 blur-3xl" />
-      <div className="absolute -bottom-40 -left-20 h-96 w-96 rounded-full bg-vyana-sage/20 blur-3xl" />
+      <div className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-vyana-sage/30 blur-3xl" />
 
-      <div className="relative mx-auto grid w-full max-w-7xl gap-16 px-6 pb-20 pt-36 lg:grid-cols-2 lg:px-8 lg:pb-24">
+      <div className="pointer-events-none absolute -bottom-40 -left-20 h-96 w-96 rounded-full bg-vyana-sage/20 blur-3xl" />
+
+      {/* Hero container: balanced top and bottom spacing */}
+      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-12 px-6 py-12 sm:py-14 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-16">
         {/* Hero Content */}
         <div className="flex flex-col justify-center">
           <p className="mb-6 text-sm font-semibold uppercase tracking-[0.25em] text-vyana-green">
@@ -14,7 +16,9 @@ export default function Hero() {
 
           <h1 className="max-w-3xl font-serif text-5xl leading-[1.08] text-vyana-dark sm:text-6xl lg:text-7xl">
             Restore Your
-            <span className="block text-vyana-green">Inner Rhythm.</span>
+            <span className="block text-vyana-green">
+              Inner Rhythm.
+            </span>
           </h1>
 
           <p className="mt-8 max-w-xl text-lg leading-8 text-gray-600">
@@ -25,7 +29,7 @@ export default function Hero() {
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
             <a
-              href="#book"
+              href="/book"
               className="rounded-full bg-vyana-green px-7 py-4 text-center text-sm font-semibold text-white transition hover:opacity-90"
             >
               Book a Consultation
