@@ -10,8 +10,12 @@ const services = [
 
 export default function Services() {
   return (
-    <section id="services" className="bg-white py-24">
+    <section
+      id="services"
+      className="bg-white py-12 sm:py-14 lg:py-16"
+    >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        {/* Section heading */}
         <div className="max-w-2xl">
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-vyana-green">
             What We Offer
@@ -22,7 +26,8 @@ export default function Services() {
           </h2>
         </div>
 
-        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Services grid */}
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
           {services.map((service) => (
             <div
               key={service}

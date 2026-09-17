@@ -18,8 +18,9 @@ const pillars = [
 
 export default function Pillars() {
   return (
-    <section className="bg-white py-24">
+    <section className="bg-white py-12 sm:py-14 lg:py-16">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        {/* Section heading */}
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-vyana-green">
             The VYANA Philosophy
@@ -36,7 +37,8 @@ export default function Pillars() {
           </p>
         </div>
 
-        <div className="mt-16 grid gap-8 md:grid-cols-3">
+        {/* Three philosophy cards */}
+        <div className="mt-10 grid gap-8 md:grid-cols-3 lg:mt-12">
           {pillars.map((pillar) => (
             <div
               key={pillar.number}

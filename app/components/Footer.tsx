@@ -2,9 +2,11 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-vyana-dark py-14 text-white">
+    <footer className="bg-vyana-dark py-12 text-white sm:py-14 lg:py-16">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="grid gap-12 md:grid-cols-3">
+        {/* Footer main content */}
+        <div className="grid gap-10 md:grid-cols-3 lg:gap-12">
+          {/* Brand */}
           <div>
             <Link href="/" className="font-serif text-2xl">
               VYANA <span className="text-vyana-sage">Wellness</span>
@@ -16,6 +18,7 @@ export default function Footer() {
             </p>
           </div>
 
+          {/* Navigation */}
           <div>
             <p className="font-semibold text-white">Explore</p>
 
@@ -42,6 +45,7 @@ export default function Footer() {
             </div>
           </div>
 
+          {/* Contact information */}
           <div>
             <p className="font-semibold text-white">VYANA Wellness</p>
 
@@ -62,7 +66,8 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-6 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between">
+        {/* Copyright and privacy */}
+        <div className="mt-10 flex flex-col gap-4 border-t border-white/10 pt-6 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between lg:mt-12">
           <p>
             © {new Date().getFullYear()} VYANA Wellness. All rights reserved.
           </p>

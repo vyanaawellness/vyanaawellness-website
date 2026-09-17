@@ -2,9 +2,13 @@ import Link from "next/link";
 
 export default function BookingCTA() {
   return (
-    <section id="book" className="bg-white py-24">
+    <section
+      id="book"
+      className="bg-white py-12 sm:py-14 lg:py-16"
+    >
       <div className="mx-auto max-w-5xl px-6 lg:px-8">
-        <div className="rounded-[2.5rem] bg-vyana-green px-8 py-16 text-center text-white sm:px-16">
+        {/* Booking call-to-action card */}
+        <div className="rounded-[2.5rem] bg-vyana-green px-8 py-12 text-center text-white sm:px-16 sm:py-14 lg:py-16">
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-vyana-sage">
             Your Journey Starts Here
           </p>

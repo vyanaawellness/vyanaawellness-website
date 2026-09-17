@@ -28,7 +28,7 @@ export default function Header() {
     <>
       <header className="sticky top-0 z-50 bg-[#234D36] shadow-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 lg:px-8">
-          
+
           {/* Logo + Brand */}
           <Link
             href="/"
@@ -51,7 +51,7 @@ export default function Header() {
               </div>
 
               <div className="text-xs tracking-[0.22em] text-[#F7F4ED]/80">
-                WELLNESS
+                Wellness
               </div>
             </div>
           </Link>
@@ -76,7 +76,7 @@ export default function Header() {
           <div className="hidden lg:block">
             <Link
               href="/book"
-              className="inline-flex items-center justify-center rounded-full bg-[#F7F4ED] px-6 py-3 text-sm font-semibold text-[#234D36] transition hover:bg-[#DDB85C] hover:text-[#234D36]"
+              className="vyana-booking-glow inline-flex items-center justify-center rounded-full bg-[#F7F4ED] px-6 py-3 text-sm font-semibold text-[#234D36] transition-[background-color,color,transform] duration-300 hover:-translate-y-0.5 hover:bg-[#DDB85C] hover:text-[#234D36] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#DDB85C]"
             >
               Book a Consultation
             </Link>
@@ -134,10 +134,11 @@ export default function Header() {
                 </Link>
               ))}
 
+              {/* Mobile Booking Button */}
               <Link
                 href="/book"
                 onClick={() => setMenuOpen(false)}
-                className="mt-5 inline-flex items-center justify-center rounded-full bg-[#F7F4ED] px-6 py-3.5 font-semibold text-[#234D36] transition hover:bg-[#DDB85C]"
+                className="vyana-booking-glow mt-5 inline-flex items-center justify-center rounded-full bg-[#F7F4ED] px-6 py-3.5 font-semibold text-[#234D36] transition-[background-color,color,transform] duration-300 hover:-translate-y-0.5 hover:bg-[#DDB85C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#DDB85C]"
               >
                 Book a Consultation
               </Link>
@@ -155,6 +156,48 @@ export default function Header() {
           className="fixed inset-0 z-40 bg-black/30 lg:hidden"
         />
       )}
+
+      {/* Booking button animation */}
+      <style jsx global>{`
+        @keyframes vyanaBookingGlow {
+          0%,
+          100% {
+            box-shadow:
+              0 0 0 0 rgba(221, 184, 92, 0),
+              0 0 0 rgba(221, 184, 92, 0);
+          }
+
+          45% {
+            box-shadow:
+              0 0 0 3px rgba(221, 184, 92, 0.3),
+              0 0 18px 4px rgba(221, 184, 92, 0.35);
+          }
+
+          70% {
+            box-shadow:
+              0 0 0 5px rgba(221, 184, 92, 0),
+              0 0 12px 2px rgba(221, 184, 92, 0.12);
+          }
+        }
+
+        .vyana-booking-glow {
+          animation: vyanaBookingGlow 1.6s ease-in-out infinite;
+        }
+
+        .vyana-booking-glow:hover {
+          animation-play-state: paused;
+          box-shadow:
+            0 0 0 2px rgba(221, 184, 92, 0.7),
+            0 8px 22px rgba(221, 184, 92, 0.25);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .vyana-booking-glow {
+            animation: none;
+            transition: none;
+          }
+        }
+      `}</style>
     </>
   );
 }

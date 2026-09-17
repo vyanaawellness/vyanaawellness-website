@@ -3,8 +3,12 @@ import Link from "next/link";
 
 export default function About() {
   return (
-    <section id="about" className="bg-vyana-cream py-24">
-      <div className="mx-auto grid max-w-7xl gap-16 px-6 lg:grid-cols-2 lg:px-8">
+    <section
+      id="about"
+      className="bg-vyana-cream py-12 sm:py-14 lg:py-16"
+    >
+      <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 sm:gap-12 lg:grid-cols-2 lg:gap-16 lg:px-8">
+        {/* Founder Photograph */}
         <div className="flex items-center justify-center">
           <div className="relative aspect-[4/5] w-full max-w-md overflow-hidden rounded-[3rem]">
             <Image
@@ -15,6 +19,7 @@ export default function About() {
               sizes="(max-width: 1024px) 100vw, 420px"
             />
 
+            {/* Photograph Caption */}
             <div className="absolute inset-x-6 bottom-6 rounded-2xl bg-white/90 p-5 shadow-sm backdrop-blur">
               <p className="font-serif text-2xl text-vyana-dark">
                 Dr. Bhoomi Panchal
@@ -27,6 +32,7 @@ export default function About() {
           </div>
         </div>
 
+        {/* Founder Biography */}
         <div className="flex flex-col justify-center">
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-vyana-green">
             Meet Your Wellness Guide

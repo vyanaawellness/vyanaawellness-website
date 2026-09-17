@@ -306,21 +306,21 @@ function AnimatedWebinarStar() {
           }
         }
 
-        /* FASTER ANIMATION: 2 SECONDS */
+        /* FASTER STAR SHIMMER: EVERY 1.6 SECONDS */
         .webinar-star-halo {
-          animation: webinarStarGlow 2s ease-in-out infinite;
+          animation: webinarStarGlow 1.6s ease-in-out infinite;
         }
 
         .webinar-star-core {
-          animation: webinarStarPulse 2s ease-in-out infinite;
+          animation: webinarStarPulse 1.6s ease-in-out infinite;
         }
 
         .webinar-star-ring {
-          animation: webinarStarRing 2s ease-out infinite;
+          animation: webinarStarRing 1.6s ease-out infinite;
         }
 
         .webinar-star-ray {
-          animation: webinarStarRay 2s ease-in-out infinite;
+          animation: webinarStarRay 1.6s ease-in-out infinite;
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -362,9 +362,13 @@ export default function Home() {
 
           <span className="hidden h-7 w-px bg-[#D9C7A2] lg:block" />
 
-          <p className="text-sm font-semibold leading-6 text-[#234D36] sm:text-base">
+          {/* CLICKABLE WEBINAR TITLE */}
+          <Link
+            href="/webinar/navratri-2026"
+            className="text-sm font-semibold leading-6 text-[#234D36] transition-colors hover:text-[#4F7942] hover:underline sm:text-base"
+          >
             Therapeutic Fasting During Navratri
-          </p>
+          </Link>
 
           <span className="hidden h-7 w-px bg-[#D9C7A2] lg:block" />
 

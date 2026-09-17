@@ -6,8 +6,12 @@ const steps = [
 
 export default function Approach() {
   return (
-    <section id="approach" className="bg-vyana-cream py-24">
+    <section
+      id="approach"
+      className="bg-vyana-cream py-12 sm:py-14 lg:py-16"
+    >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        {/* Section heading */}
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-vyana-green">
             Our Approach
@@ -24,7 +28,8 @@ export default function Approach() {
           </p>
         </div>
 
-        <div className="mt-16 grid gap-8 md:grid-cols-3">
+        {/* Three-step approach */}
+        <div className="mt-10 grid gap-8 md:grid-cols-3 lg:mt-12">
           {steps.map((step, index) => (
             <div key={step} className="text-center">
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-vyana-green font-serif text-xl text-white">

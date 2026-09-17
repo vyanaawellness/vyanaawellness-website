@@ -13,8 +13,12 @@ const conditions = [
 
 export default function Conditions() {
   return (
-    <section id="conditions" className="bg-vyana-green py-24 text-white">
+    <section
+      id="conditions"
+      className="bg-vyana-green py-12 text-white sm:py-14 lg:py-16"
+    >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        {/* Section heading */}
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-vyana-sage">
             Conditions Supported
@@ -25,7 +29,8 @@ export default function Conditions() {
           </h2>
         </div>
 
-        <div className="mx-auto mt-14 grid max-w-5xl gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Conditions grid */}
+        <div className="mx-auto mt-10 grid max-w-5xl gap-x-8 gap-y-4 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
           {conditions.map((condition) => (
             <div
               key={condition}
