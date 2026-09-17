@@ -57,7 +57,7 @@ export default function ContactPage() {
 
               <div className="mt-10 space-y-5">
                 <a
-                  href="mailto:dr.bhoomi15@gmail.com"
+                  href="mailto:info@vyanaawellness.com"
                   className="block rounded-3xl bg-vyana-cream p-6 transition hover:-translate-y-1"
                 >
                   <p className="text-sm font-semibold uppercase tracking-[0.2em] text-vyana-green">
