@@ -65,7 +65,7 @@ export default function ContactPage() {
                   </p>
 
                   <p className="mt-3 font-serif text-xl text-vyana-dark">
-                    dr.bhoomi15@gmail.com
+                    info@vyanaawellness.com
                   </p>
                 </a>
 

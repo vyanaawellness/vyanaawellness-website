@@ -53,10 +53,10 @@ export default function Footer() {
               <p>Dr. Bhoomi Panchal, BNYS</p>
 
               <a
-                href="mailto:dr.bhoomi15@gmail.com"
+                href="mailto:info@vyanaawellness.com"
                 className="block hover:text-white"
               >
-                dr.bhoomi15@gmail.com
+                info@vyanaawellness.com
               </a>
 
               <Link href="/book" className="block hover:text-white">
