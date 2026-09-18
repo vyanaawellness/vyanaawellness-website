@@ -1,19 +1,14 @@
 /**
- * VYANA Wellness — Navratri Webinar Registration
+ * VYANA Wellness
+ * Navratri Webinar Registration
  *
  * Cloudflare Pages Function
  *
  * POST /api/webinar-register
- *   Saves registration and sends confirmation emails.
+ * Saves registration to D1 and sends emails using Resend.
  *
  * GET /api/webinar-register?calendar=ics
- *   Downloads a calendar event compatible with Apple Calendar,
- *   Outlook, and other calendar applications.
- *
- * Required Cloudflare bindings:
- * DB                 D1 database
- * RESEND_API_KEY     Secret
- * RESEND_FROM_EMAIL  Text variable
+ * Downloads an Apple Calendar-compatible ICS event.
  */
 
 type D1Statement = {
@@ -57,9 +52,6 @@ type Registration = {
 
 /* =========================================================
    WEBINAR CONFIGURATION
-
-   Duration is provisional.
-   Change the end time once the duration is confirmed.
    ========================================================= */
 
 const WEBINAR_ID = "navratri-2026";
@@ -74,36 +66,58 @@ const WEBINAR_TIME_LABEL =
   "6:00 PM IST";
 
 const WEBINAR_DURATION_LABEL =
-  "Approximately 60 minutes (provisional)";
+  "60 minutes (provisional)";
 
-// UTC equivalent of October 4, 2026, 6:00 PM IST.
-const WEBINAR_START_UTC = "2026-10-04T12:30:00Z";
+// October 4, 2026, 6:00 PM IST
+const WEBINAR_START_UTC =
+  "2026-10-04T12:30:00Z";
 
-// Provisional end: October 4, 2026, 7:00 PM IST.
-const WEBINAR_END_UTC = "2026-10-04T13:30:00Z";
+// October 4, 2026, 7:00 PM IST
+const WEBINAR_END_UTC =
+  "2026-10-04T13:30:00Z";
 
-const WEBSITE_URL = "https://vyanaawellness.com";
+const WEBSITE_URL =
+  "https://vyanaawellness.com";
 
 const NOTIFICATION_EMAIL =
   "info@vyanaawellness.com";
 
+/* =========================================================
+   ZOOM CONFIGURATION
+   ========================================================= */
+
+const ZOOM_JOIN_URL =
+  "https://us05web.zoom.us/j/6529768137?pwd=WwghR0hyr6W6owlGSLC5ljtO3uNpZs.1&omn=82041203554";
+
+const ZOOM_MEETING_ID =
+  "652 976 8137";
+
+const ZOOM_PASSCODE =
+  "Navratri";
+
 const MAX_REQUEST_LENGTH = 30000;
 
 /* =========================================================
-   JSON RESPONSE
+   RESPONSE HELPERS
    ========================================================= */
 
 function json(
   body: Record<string, unknown>,
   status = 200
 ): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": "no-store",
-    },
-  });
+  return new Response(
+    JSON.stringify(body),
+    {
+      status,
+      headers: {
+        "Content-Type":
+          "application/json; charset=utf-8",
+
+        "Cache-Control":
+          "no-store",
+      },
+    }
+  );
 }
 
 /* =========================================================
@@ -114,12 +128,18 @@ function cleanText(
   value: unknown,
   maxLength: number
 ): string {
-  return typeof value === "string"
-    ? value.trim().slice(0, maxLength)
-    : "";
+  if (typeof value !== "string") {
+    return "";
+  }
+
+  return value
+    .trim()
+    .slice(0, maxLength);
 }
 
-function cleanArray(value: unknown): string[] {
+function cleanArray(
+  value: unknown
+): string[] {
   if (!Array.isArray(value)) {
     return [];
   }
@@ -129,7 +149,10 @@ function cleanArray(value: unknown): string[] {
       (item): item is string =>
         typeof item === "string"
     )
-    .map((item) => item.trim().slice(0, 150))
+    .map(
+      (item) =>
+        item.trim().slice(0, 150)
+    )
     .filter(Boolean)
     .slice(0, 30);
 }
@@ -138,44 +161,54 @@ function parseRegistration(
   input: Record<string, unknown>
 ): Registration {
   return {
-    name: cleanText(input.name, 100),
+    name:
+      cleanText(input.name, 100),
 
-    whatsapp: cleanText(input.whatsapp, 30),
+    whatsapp:
+      cleanText(input.whatsapp, 30),
 
-    email: cleanText(input.email, 254).toLowerCase(),
+    email:
+      cleanText(input.email, 254)
+        .toLowerCase(),
 
-    cityState: cleanText(input.cityState, 150),
+    cityState:
+      cleanText(input.cityState, 150),
 
-    ageGroup: cleanText(input.ageGroup, 50),
+    ageGroup:
+      cleanText(input.ageGroup, 50),
 
-    gender: cleanText(input.gender, 50),
+    gender:
+      cleanText(input.gender, 50),
 
-    fastingExperience: cleanText(
-      input.fastingExperience,
-      100
-    ),
+    fastingExperience:
+      cleanText(
+        input.fastingExperience,
+        100
+      ),
 
-    primaryGoals: cleanArray(input.primaryGoals),
+    primaryGoals:
+      cleanArray(input.primaryGoals),
 
-    fastingPattern: cleanText(
-      input.fastingPattern,
-      100
-    ),
+    fastingPattern:
+      cleanText(
+        input.fastingPattern,
+        100
+      ),
 
-    fastingSymptoms: cleanArray(
-      input.fastingSymptoms
-    ),
+    fastingSymptoms:
+      cleanArray(input.fastingSymptoms),
 
-    learningInterests: cleanArray(
-      input.learningInterests
-    ),
+    learningInterests:
+      cleanArray(input.learningInterests),
 
-    question: cleanText(input.question, 1000),
+    question:
+      cleanText(input.question, 1000),
 
-    referralSource: cleanText(
-      input.referralSource,
-      100
-    ),
+    referralSource:
+      cleanText(
+        input.referralSource,
+        100
+      ),
 
     educationalConsent:
       input.educationalConsent === true,
@@ -188,12 +221,21 @@ function parseRegistration(
   };
 }
 
-function isValidEmail(email: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+function isValidEmail(
+  email: string
+): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+    email
+  );
 }
 
-function escapeHtml(value: string): string {
-  const replacements: Record<string, string> = {
+function escapeHtml(
+  value: string
+): string {
+  const replacements: Record<
+    string,
+    string
+  > = {
     "&": "&amp;",
     "<": "&lt;",
     ">": "&gt;",
@@ -203,7 +245,9 @@ function escapeHtml(value: string): string {
 
   return value.replace(
     /[&<>"']/g,
-    (character) => replacements[character] || character
+    (character) =>
+      replacements[character] ||
+      character
   );
 }
 
@@ -211,28 +255,51 @@ function escapeHtml(value: string): string {
    CALENDAR HELPERS
    ========================================================= */
 
-function compactUtc(value: string): string {
-  return value.replace(/[-:]/g, "").replace(".000", "");
+function compactUtc(
+  value: string
+): string {
+  return value
+    .replace(/[-:]/g, "")
+    .replace(".000", "");
+}
+
+function calendarDescription(): string {
+  return (
+    "VYANA Wellness - Therapeutic Fasting During Navratri\n\n" +
+
+    "Hosted by Dr. Bhoomi Panchal, BNYS.\n\n" +
+
+    "Join Zoom Meeting:\n" +
+    ZOOM_JOIN_URL +
+
+    "\n\nMeeting ID: " +
+    ZOOM_MEETING_ID +
+
+    "\nPasscode: " +
+    ZOOM_PASSCODE +
+
+    "\n\nThe calendar currently reserves 6:00-7:00 PM IST. " +
+    "The duration is provisional."
+  );
 }
 
 function createGoogleCalendarUrl(): string {
-  const parameters = new URLSearchParams({
-    action: "TEMPLATE",
+  const parameters =
+    new URLSearchParams({
+      action: "TEMPLATE",
 
-    text: WEBINAR_TITLE,
+      text: WEBINAR_TITLE,
 
-    dates:
-      `${compactUtc(WEBINAR_START_UTC)}/` +
-      compactUtc(WEBINAR_END_UTC),
+      dates:
+        `${compactUtc(WEBINAR_START_UTC)}/` +
+        compactUtc(WEBINAR_END_UTC),
 
-    details:
-      "Thank you for registering for the VYANA Wellness webinar. " +
-      "The end time is provisional. " +
-      "Joining instructions and any schedule updates " +
-      "will be shared before the event.",
+      details:
+        calendarDescription(),
 
-    location: "Online - joining link to be shared",
-  });
+      location:
+        ZOOM_JOIN_URL,
+    });
 
   return (
     "https://calendar.google.com/calendar/render?" +
@@ -241,25 +308,29 @@ function createGoogleCalendarUrl(): string {
 }
 
 function createOutlookCalendarUrl(): string {
-  const parameters = new URLSearchParams({
-    path: "/calendar/action/compose",
+  const parameters =
+    new URLSearchParams({
+      path:
+        "/calendar/action/compose",
 
-    rru: "addevent",
+      rru:
+        "addevent",
 
-    subject: WEBINAR_TITLE,
+      subject:
+        WEBINAR_TITLE,
 
-    startdt: WEBINAR_START_UTC,
+      startdt:
+        WEBINAR_START_UTC,
 
-    enddt: WEBINAR_END_UTC,
+      enddt:
+        WEBINAR_END_UTC,
 
-    body:
-      "Thank you for registering for the VYANA Wellness webinar. " +
-      "The end time is provisional. " +
-      "Joining instructions and any schedule updates " +
-      "will be shared before the event.",
+      body:
+        calendarDescription(),
 
-    location: "Online - joining link to be shared",
-  });
+      location:
+        ZOOM_JOIN_URL,
+    });
 
   return (
     "https://outlook.live.com/calendar/0/deeplink/compose?" +
@@ -268,10 +339,15 @@ function createOutlookCalendarUrl(): string {
 }
 
 function createIcsUrl(): string {
-  return `${WEBSITE_URL}/api/webinar-register?calendar=ics`;
+  return (
+    WEBSITE_URL +
+    "/api/webinar-register?calendar=ics"
+  );
 }
 
-function escapeIcsText(value: string): string {
+function escapeIcsText(
+  value: string
+): string {
   return value
     .replace(/\\/g, "\\\\")
     .replace(/\r?\n/g, "\\n")
@@ -279,12 +355,11 @@ function escapeIcsText(value: string): string {
     .replace(/;/g, "\\;");
 }
 
-/**
- * Fold long iCalendar lines at UTF-8 byte boundaries.
- * Continuation lines begin with one space.
- */
-function foldIcsLine(line: string): string {
-  const encoder = new TextEncoder();
+function foldIcsLine(
+  line: string
+): string {
+  const encoder =
+    new TextEncoder();
 
   const output: string[] = [];
 
@@ -296,21 +371,28 @@ function foldIcsLine(line: string): string {
     const characterBytes =
       encoder.encode(character).length;
 
-    const limit = output.length === 0 ? 75 : 74;
+    const limit =
+      output.length === 0
+        ? 75
+        : 74;
 
     if (
-      currentBytes + characterBytes > limit &&
+      currentBytes +
+        characterBytes >
+        limit &&
       current.length > 0
     ) {
       output.push(current);
 
       current = character;
 
-      currentBytes = characterBytes;
+      currentBytes =
+        characterBytes;
     } else {
       current += character;
 
-      currentBytes += characterBytes;
+      currentBytes +=
+        characterBytes;
     }
   }
 
@@ -320,12 +402,6 @@ function foldIcsLine(line: string): string {
 }
 
 function createIcsContent(): string {
-  const description =
-    "VYANA Wellness webinar. " +
-    "The end time is provisional. " +
-    "Joining instructions and any schedule updates " +
-    "will be shared before the event.";
-
   const lines = [
     "BEGIN:VCALENDAR",
 
@@ -341,17 +417,29 @@ function createIcsContent(): string {
 
     "UID:navratri-2026@vyanaawellness.com",
 
-    "DTSTAMP:20260917T000000Z",
+    "DTSTAMP:20260918T000000Z",
 
-    `DTSTART:${compactUtc(WEBINAR_START_UTC)}`,
+    `DTSTART:${compactUtc(
+      WEBINAR_START_UTC
+    )}`,
 
-    `DTEND:${compactUtc(WEBINAR_END_UTC)}`,
+    `DTEND:${compactUtc(
+      WEBINAR_END_UTC
+    )}`,
 
-    `SUMMARY:${escapeIcsText(WEBINAR_TITLE)}`,
+    `SUMMARY:${escapeIcsText(
+      WEBINAR_TITLE
+    )}`,
 
-    `DESCRIPTION:${escapeIcsText(description)}`,
+    `DESCRIPTION:${escapeIcsText(
+      calendarDescription()
+    )}`,
 
-    "LOCATION:Online - joining link to be shared",
+    `LOCATION:${escapeIcsText(
+      ZOOM_JOIN_URL
+    )}`,
+
+    `URL:${ZOOM_JOIN_URL}`,
 
     "STATUS:CONFIRMED",
 
@@ -361,44 +449,57 @@ function createIcsContent(): string {
   ];
 
   return (
-    lines.map(foldIcsLine).join("\r\n") +
+    lines
+      .map(foldIcsLine)
+      .join("\r\n") +
     "\r\n"
   );
 }
 
 /* =========================================================
-   GET HANDLER — DOWNLOAD .ICS CALENDAR FILE
+   GET HANDLER
+   APPLE CALENDAR / ICS DOWNLOAD
    ========================================================= */
 
 export async function onRequestGet({
   request,
 }: PagesContext): Promise<Response> {
-  const url = new URL(request.url);
+  const url =
+    new URL(request.url);
 
-  if (url.searchParams.get("calendar") !== "ics") {
+  if (
+    url.searchParams.get(
+      "calendar"
+    ) !== "ics"
+  ) {
     return json(
       {
         success: false,
-        error: "Calendar resource not found.",
+
+        error:
+          "Calendar resource not found.",
       },
       404
     );
   }
 
-  return new Response(createIcsContent(), {
-    status: 200,
+  return new Response(
+    createIcsContent(),
+    {
+      status: 200,
 
-    headers: {
-      "Content-Type":
-        "text/calendar; charset=utf-8",
+      headers: {
+        "Content-Type":
+          "text/calendar; charset=utf-8",
 
-      "Content-Disposition":
-        'attachment; filename="vyana-navratri-webinar.ics"',
+        "Content-Disposition":
+          'attachment; filename="vyana-navratri-webinar.ics"',
 
-      "Cache-Control":
-        "public, max-age=300",
-    },
-  });
+        "Cache-Control":
+          "public, max-age=300",
+      },
+    }
+  );
 }
 
 /* =========================================================
@@ -418,9 +519,11 @@ async function sendEmail(
       method: "POST",
 
       headers: {
-        Authorization: `Bearer ${apiKey}`,
+        Authorization:
+          `Bearer ${apiKey}`,
 
-        "Content-Type": "application/json",
+        "Content-Type":
+          "application/json",
       },
 
       body: JSON.stringify({
@@ -436,7 +539,8 @@ async function sendEmail(
   );
 
   if (!response.ok) {
-    const errorBody = await response.text();
+    const errorBody =
+      await response.text();
 
     console.error(
       "Resend request failed:",
@@ -451,7 +555,8 @@ async function sendEmail(
 }
 
 /* =========================================================
-   POST HANDLER — WEBINAR REGISTRATION
+   POST HANDLER
+   WEBINAR REGISTRATION
    ========================================================= */
 
 export async function onRequestPost({
@@ -459,14 +564,19 @@ export async function onRequestPost({
   env,
 }: PagesContext): Promise<Response> {
   try {
-    /* 1. Check configuration */
+    /* -------------------------------------
+       1. Check environment
+       ------------------------------------- */
 
     if (!env.DB) {
-      console.error("Missing D1 binding: DB");
+      console.error(
+        "Missing D1 binding: DB"
+      );
 
       return json(
         {
           success: false,
+
           error:
             "Registration service is not configured.",
         },
@@ -485,6 +595,7 @@ export async function onRequestPost({
       return json(
         {
           success: false,
+
           error:
             "Registration email service is not configured.",
         },
@@ -492,31 +603,44 @@ export async function onRequestPost({
       );
     }
 
-    /* 2. Validate request format */
+    /* -------------------------------------
+       2. Validate request
+       ------------------------------------- */
 
     const contentType =
-      request.headers.get("content-type") || "";
+      request.headers.get(
+        "content-type"
+      ) || "";
 
     if (
       !contentType
         .toLowerCase()
-        .includes("application/json")
+        .includes(
+          "application/json"
+        )
     ) {
       return json(
         {
           success: false,
-          error: "Invalid request format.",
+
+          error:
+            "Invalid request format.",
         },
         415
       );
     }
 
-    const rawBody = await request.text();
+    const rawBody =
+      await request.text();
 
-    if (rawBody.length > MAX_REQUEST_LENGTH) {
+    if (
+      rawBody.length >
+      MAX_REQUEST_LENGTH
+    ) {
       return json(
         {
           success: false,
+
           error:
             "Registration data is too large.",
         },
@@ -524,17 +648,22 @@ export async function onRequestPost({
       );
     }
 
-    /* 3. Parse JSON */
+    /* -------------------------------------
+       3. Parse JSON
+       ------------------------------------- */
 
     let input: unknown;
 
     try {
-      input = JSON.parse(rawBody);
+      input =
+        JSON.parse(rawBody);
     } catch {
       return json(
         {
           success: false,
-          error: "Invalid registration data.",
+
+          error:
+            "Invalid registration data.",
         },
         400
       );
@@ -542,37 +671,51 @@ export async function onRequestPost({
 
     if (
       input === null ||
-      typeof input !== "object" ||
+      typeof input !==
+        "object" ||
       Array.isArray(input)
     ) {
       return json(
         {
           success: false,
-          error: "Invalid registration data.",
+
+          error:
+            "Invalid registration data.",
         },
         400
       );
     }
 
-    const registration = parseRegistration(
-      input as Record<string, unknown>
-    );
+    const registration =
+      parseRegistration(
+        input as Record<
+          string,
+          unknown
+        >
+      );
 
-    /* 4. Validate required fields */
+    /* -------------------------------------
+       4. Validate fields
+       ------------------------------------- */
 
     if (
       !registration.name ||
       !registration.whatsapp ||
-      !isValidEmail(registration.email) ||
+      !isValidEmail(
+        registration.email
+      ) ||
       !registration.fastingExperience ||
-      registration.primaryGoals.length === 0 ||
-      registration.learningInterests.length === 0 ||
+      registration.primaryGoals
+        .length === 0 ||
+      registration.learningInterests
+        .length === 0 ||
       !registration.educationalConsent ||
       !registration.webinarUpdatesConsent
     ) {
       return json(
         {
           success: false,
+
           error:
             "Please complete all required registration fields.",
         },
@@ -580,11 +723,15 @@ export async function onRequestPost({
       );
     }
 
-    /* 5. Save registration */
+    /* -------------------------------------
+       5. Save to Cloudflare D1
+       ------------------------------------- */
 
-    const registrationId = crypto.randomUUID();
+    const registrationId =
+      crypto.randomUUID();
 
-    const createdAt = new Date().toISOString();
+    const createdAt =
+      new Date().toISOString();
 
     await env.DB.prepare(
       `INSERT INTO webinar_registrations (
@@ -649,44 +796,75 @@ export async function onRequestPost({
 
         registration.referralSource,
 
-        registration.educationalConsent ? 1 : 0,
+        registration.educationalConsent
+          ? 1
+          : 0,
 
-        registration.webinarUpdatesConsent ? 1 : 0,
+        registration.webinarUpdatesConsent
+          ? 1
+          : 0,
 
-        registration.marketingConsent ? 1 : 0,
+        registration.marketingConsent
+          ? 1
+          : 0,
 
         createdAt
       )
       .run();
 
-    /* 6. Escape email content */
+    /* -------------------------------------
+       6. Prepare safe HTML values
+       ------------------------------------- */
 
-    const safeName = escapeHtml(
-      registration.name
-    );
+    const safeName =
+      escapeHtml(
+        registration.name
+      );
 
-    const safeEmail = escapeHtml(
-      registration.email
-    );
+    const safeEmail =
+      escapeHtml(
+        registration.email
+      );
 
-    const safeWhatsapp = escapeHtml(
-      registration.whatsapp
-    );
+    const safeWhatsapp =
+      escapeHtml(
+        registration.whatsapp
+      );
 
-    const safeCity = escapeHtml(
-      registration.cityState || "Not provided"
-    );
+    const safeCity =
+      escapeHtml(
+        registration.cityState ||
+          "Not provided"
+      );
 
-    const safeGoals = registration.primaryGoals
-      .map(escapeHtml)
-      .join(", ");
+    const safeGoals =
+      registration.primaryGoals
+        .map(escapeHtml)
+        .join(", ");
 
     const safeInterests =
       registration.learningInterests
         .map(escapeHtml)
         .join(", ");
 
-    /* 7. Calendar links */
+    const safeMeetingId =
+      escapeHtml(
+        ZOOM_MEETING_ID
+      );
+
+    const safePasscode =
+      escapeHtml(
+        ZOOM_PASSCODE
+      );
+
+    const safeZoomUrl =
+      escapeHtml(
+        ZOOM_JOIN_URL
+      );
+
+    /* -------------------------------------
+       7. Generate calendar links
+       ------------------------------------- */
 
     const googleCalendarUrl =
       createGoogleCalendarUrl();
@@ -697,7 +875,9 @@ export async function onRequestPost({
     const icsCalendarUrl =
       createIcsUrl();
 
-    /* 8. Admin notification email */
+    /* -------------------------------------
+       8. Admin notification
+       ------------------------------------- */
 
     const notificationHtml = `
       <div style="
@@ -707,7 +887,10 @@ export async function onRequestPost({
         color:#234D36;
         line-height:1.7;
       ">
-        <h1>New VYANA Webinar Registration</h1>
+
+        <h1>
+          New VYANA Webinar Registration
+        </h1>
 
         <p>
           A new attendee has registered for
@@ -754,13 +937,16 @@ export async function onRequestPost({
         <hr>
 
         <p>
-          The complete registration has been saved
-          in Cloudflare D1.
+          The complete registration has
+          been saved in Cloudflare D1.
         </p>
+
       </div>
     `;
 
-    /* 9. Attendee confirmation email */
+    /* -------------------------------------
+       9. Attendee confirmation email
+       ------------------------------------- */
 
     const confirmationHtml = `
       <div style="
@@ -794,11 +980,13 @@ export async function onRequestPost({
           margin:24px 0;
         ">
 
-        <p>Dear ${safeName},</p>
+        <p>
+          Dear ${safeName},
+        </p>
 
         <p>
-          Thank you for registering for our
-          upcoming webinar!
+          Thank you for registering
+          for our upcoming webinar!
         </p>
 
         <h2 style="
@@ -816,36 +1004,126 @@ export async function onRequestPost({
           margin:24px 0;
         ">
 
-          <p style="margin:0 0 8px;">
+          <p style="
+            margin:0 0 8px;
+          ">
             <strong>Date:</strong>
             ${WEBINAR_DATE_LABEL}
           </p>
 
-          <p style="margin:0 0 8px;">
+          <p style="
+            margin:0 0 8px;
+          ">
             <strong>Time:</strong>
             ${WEBINAR_TIME_LABEL}
           </p>
 
-          <p style="margin:0 0 8px;">
+          <p style="
+            margin:0 0 8px;
+          ">
             <strong>Duration:</strong>
             ${WEBINAR_DURATION_LABEL}
           </p>
 
-          <p style="margin:0;">
+          <p style="
+            margin:0;
+          ">
             <strong>Format:</strong>
-            Online Webinar
+            Live on Zoom
           </p>
 
         </div>
 
         <p>
-          Your registration has been received.
+          Your registration has been
+          received successfully.
           We look forward to having you join us!
         </p>
 
-        <p>
-          Joining instructions will be shared
-          before the webinar.
+        <!-- ZOOM JOINING SECTION -->
+
+        <div style="
+          background:#F0F7EE;
+          border:1px solid #A8C3A0;
+          border-radius:12px;
+          padding:24px;
+          margin:28px 0;
+          text-align:center;
+        ">
+
+          <h2 style="
+            color:#234D36;
+            font-size:23px;
+            margin-top:0;
+            margin-bottom:12px;
+          ">
+            Your Webinar Joining Details
+          </h2>
+
+          <p style="
+            color:#4F7942;
+            font-size:14px;
+            margin-bottom:22px;
+          ">
+            Join Dr. Bhoomi Panchal
+            live on Zoom.
+          </p>
+
+          <a
+            href="${safeZoomUrl}"
+            style="
+              display:inline-block;
+              background:#234D36;
+              color:#FFFFFF;
+              padding:16px 30px;
+              border-radius:8px;
+              text-decoration:none;
+              font-size:16px;
+              font-weight:bold;
+            "
+          >
+            Join Webinar on Zoom
+          </a>
+
+          <p style="
+            margin-top:24px;
+            margin-bottom:8px;
+            font-size:14px;
+          ">
+            <strong>Meeting ID:</strong>
+            ${safeMeetingId}
+          </p>
+
+          <p style="
+            margin-top:0;
+            margin-bottom:0;
+            font-size:14px;
+          ">
+            <strong>Passcode:</strong>
+            ${safePasscode}
+          </p>
+
+          <p style="
+            margin-top:20px;
+            margin-bottom:0;
+            font-size:12px;
+            color:#666666;
+          ">
+            We recommend joining
+            5 minutes early to check
+            your audio and internet connection.
+          </p>
+
+        </div>
+
+        <p style="
+          color:#666666;
+          font-size:13px;
+        ">
+          Please keep this email handy
+          on the day of the webinar.
+          Use the Zoom button above
+          to join the session.
         </p>
 
         <hr style="
@@ -853,6 +1131,8 @@ export async function onRequestPost({
           border-top:1px solid #DDE8D9;
           margin:30px 0;
         ">
+
+        <!-- CALENDAR SECTION -->
 
         <h2 style="
           color:#234D36;
@@ -862,9 +1142,12 @@ export async function onRequestPost({
           Save the Date
         </h2>
 
-        <p style="text-align:center;">
-          Add this webinar to your personal
-          calendar so you don't miss it.
+        <p style="
+          text-align:center;
+        ">
+          Add this webinar to your
+          personal calendar so
+          you don't miss it.
         </p>
 
         <table
@@ -873,10 +1156,16 @@ export async function onRequestPost({
           cellspacing="0"
           border="0"
           width="100%"
-          style="margin:24px 0;"
+          style="
+            margin:24px 0;
+          "
         >
+
           <tr>
-            <td align="center" style="padding:6px;">
+            <td
+              align="center"
+              style="padding:6px;"
+            >
 
               <a
                 href="${escapeHtml(googleCalendarUrl)}"
@@ -898,7 +1187,10 @@ export async function onRequestPost({
           </tr>
 
           <tr>
-            <td align="center" style="padding:6px;">
+            <td
+              align="center"
+              style="padding:6px;"
+            >
 
               <a
                 href="${escapeHtml(outlookCalendarUrl)}"
@@ -920,7 +1212,10 @@ export async function onRequestPost({
           </tr>
 
           <tr>
-            <td align="center" style="padding:6px;">
+            <td
+              align="center"
+              style="padding:6px;"
+            >
 
               <a
                 href="${escapeHtml(icsCalendarUrl)}"
@@ -941,6 +1236,7 @@ export async function onRequestPost({
 
             </td>
           </tr>
+
         </table>
 
         <p style="
@@ -948,10 +1244,11 @@ export async function onRequestPost({
           font-size:12px;
           text-align:center;
         ">
-          Calendar events currently reserve
-          6:00–7:00 PM IST as a provisional
-          time slot. The final duration and
-          joining link will be shared later.
+          The calendar currently reserves
+          6:00-7:00 PM IST.
+          The duration is provisional.
+          Your calendar event includes
+          the Zoom joining details.
         </p>
 
         <hr style="
@@ -967,6 +1264,7 @@ export async function onRequestPost({
           <strong>
             Dr. Bhoomi Panchal, BNYS
           </strong>
+
           <br>
 
           VYANA Wellness
@@ -976,53 +1274,60 @@ export async function onRequestPost({
           color:#666666;
           font-size:12px;
         ">
-          This webinar is educational and
-          does not replace individualized
-          medical advice.
+          This webinar is educational
+          and does not replace
+          individualized medical advice.
         </p>
 
       </div>
     `;
 
-    /* 10. Send both emails */
+    /* -------------------------------------
+       10. Send emails
+       ------------------------------------- */
 
-    const emailResults = await Promise.allSettled([
-      sendEmail(
-        env.RESEND_API_KEY,
+    const emailResults =
+      await Promise.allSettled([
+        sendEmail(
+          env.RESEND_API_KEY,
 
-        env.RESEND_FROM_EMAIL,
+          env.RESEND_FROM_EMAIL,
 
-        NOTIFICATION_EMAIL,
+          NOTIFICATION_EMAIL,
 
-        `New Webinar Registration: ${registration.name}`,
+          `New Webinar Registration: ${registration.name}`,
 
-        notificationHtml
-      ),
+          notificationHtml
+        ),
 
-      sendEmail(
-        env.RESEND_API_KEY,
+        sendEmail(
+          env.RESEND_API_KEY,
 
-        env.RESEND_FROM_EMAIL,
+          env.RESEND_FROM_EMAIL,
 
-        registration.email,
+          registration.email,
 
-        "Your VYANA Navratri Webinar Registration",
+          "Your VYANA Navratri Webinar Registration - Zoom Joining Details",
 
-        confirmationHtml
-      ),
-    ]);
+          confirmationHtml
+        ),
+      ]);
 
     const notificationStatus =
-      emailResults[0].status === "fulfilled"
+      emailResults[0].status ===
+      "fulfilled"
         ? "sent"
         : "failed";
 
     const confirmationStatus =
-      emailResults[1].status === "fulfilled"
+      emailResults[1].status ===
+      "fulfilled"
         ? "sent"
         : "failed";
 
-    /* 11. Update email statuses */
+    /* -------------------------------------
+       11. Update email statuses
+       ------------------------------------- */
 
     try {
       await env.DB.prepare(
@@ -1046,14 +1351,18 @@ export async function onRequestPost({
       );
     }
 
-    /* 12. Return registration result */
+    /* -------------------------------------
+       12. Return response
+       ------------------------------------- */
 
     if (
-      notificationStatus === "failed" ||
-      confirmationStatus === "failed"
+      notificationStatus ===
+        "failed" ||
+      confirmationStatus ===
+        "failed"
     ) {
       console.error(
-        "Registration saved, but email sending failed:",
+        "Registration saved but email sending failed:",
         registrationId
       );
 
@@ -1062,7 +1371,8 @@ export async function onRequestPost({
 
         registrationId,
 
-        emailStatus: "partial_failure",
+        emailStatus:
+          "partial_failure",
 
         message:
           "Registration saved. Some emails could not be sent.",
