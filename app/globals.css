@@ -1,5 +1,34 @@
 @import "tailwindcss";
 
+/* Shared page gutters and section rhythm, including page introductions. */
+@utility vyana-gutter {
+  padding-inline: 1.5rem;
+
+  @media (min-width: 64rem) {
+    padding-inline: 2rem;
+  }
+}
+
+@utility vyana-section {
+  padding-block: 3rem;
+
+  @media (min-width: 40rem) {
+    padding-block: 3.5rem;
+  }
+
+  @media (min-width: 64rem) {
+    padding-block: 4rem;
+  }
+}
+
+@utility vyana-panel {
+  padding: 1.5rem;
+
+  @media (min-width: 40rem) {
+    padding: 2rem;
+  }
+}
+
 :root {
   --background: #f7f4ed;
   --foreground: #333333;

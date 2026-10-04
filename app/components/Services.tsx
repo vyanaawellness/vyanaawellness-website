@@ -12,9 +12,9 @@ export default function Services() {
   return (
     <section
       id="services"
-      className="bg-white py-12 sm:py-14 lg:py-16"
+      className="bg-white vyana-section"
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl vyana-gutter">
         {/* Section heading */}
         <div className="max-w-2xl">
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-vyana-green">

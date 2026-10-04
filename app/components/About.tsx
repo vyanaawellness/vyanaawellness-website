@@ -5,9 +5,9 @@ export default function About() {
   return (
     <section
       id="about"
-      className="bg-vyana-cream py-12 sm:py-14 lg:py-16"
+      className="bg-vyana-cream vyana-section"
     >
-      <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 sm:gap-12 lg:grid-cols-2 lg:gap-16 lg:px-8">
+      <div className="mx-auto grid max-w-7xl items-center gap-8 lg:grid-cols-2 lg:gap-12 vyana-gutter">
         {/* Founder Photograph */}
         <div className="flex items-center justify-center">
           <div className="relative aspect-[4/5] w-full max-w-md overflow-hidden rounded-[3rem]">
@@ -42,7 +42,7 @@ export default function About() {
             Healthcare that looks at the whole you.
           </h2>
 
-          <p className="mt-7 leading-8 text-gray-600">
+          <p className="mt-6 leading-8 text-gray-600">
             VYANA Wellness was founded by Dr. Bhoomi Panchal, BNYS, with a
             vision to help individuals take charge of their health through
             sustainable lifestyle practices and holistic wellness.

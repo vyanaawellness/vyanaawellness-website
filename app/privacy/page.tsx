@@ -13,25 +13,25 @@ export default function PrivacyPage() {
       <Header />
 
       <main>
-        <section className="bg-vyana-cream px-6 pb-20 pt-40 lg:px-8">
-          <div className="mx-auto max-w-4xl">
+        <section className="bg-vyana-cream vyana-section">
+          <div className="vyana-gutter mx-auto max-w-4xl">
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-vyana-green">
               Privacy
             </p>
 
-            <h1 className="mt-5 font-serif text-5xl text-vyana-dark sm:text-6xl">
+            <h1 className="mt-4 font-serif text-5xl text-vyana-dark sm:text-6xl">
               Privacy Policy
             </h1>
 
-            <p className="mt-7 leading-7 text-gray-600">
+            <p className="mt-6 leading-7 text-gray-600">
               This page will explain how VYANA Wellness collects, uses, stores,
               and protects information submitted through this website.
             </p>
           </div>
         </section>
 
-        <section className="bg-white py-20">
-          <div className="mx-auto max-w-4xl space-y-10 px-6 text-gray-600">
+        <section className="bg-white vyana-section">
+          <div className="mx-auto max-w-4xl space-y-10 text-gray-600 vyana-gutter">
             <div>
               <h2 className="font-serif text-2xl text-vyana-dark">
                 Information We Collect

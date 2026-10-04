@@ -220,7 +220,7 @@ export default function WebinarRegistrationForm() {
     return (
       <div
         role="status"
-        className="rounded-3xl border border-[#DDE8D9] bg-[#F7F4ED] px-6 py-14 text-center sm:px-12"
+        className="rounded-3xl border border-[#DDE8D9] bg-[#F7F4ED] vyana-panel text-center"
       >
         <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#E0ECDC] text-4xl text-[#234D36]">
           ✓
@@ -240,7 +240,7 @@ export default function WebinarRegistrationForm() {
           details you provided.
         </p>
 
-        <p className="mt-8 font-serif text-xl text-[#234D36]">
+        <p className="mt-6 font-serif text-xl text-[#234D36]">
           VYANA Wellness
         </p>
 

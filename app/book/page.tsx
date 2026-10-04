@@ -15,17 +15,17 @@ export default function BookPage() {
 
       <main>
         {/* Page Header */}
-        <section className="bg-vyana-cream px-6 pb-14 pt-40 lg:px-8">
-          <div className="mx-auto max-w-4xl text-center">
+        <section className="bg-vyana-cream vyana-section">
+          <div className="vyana-gutter mx-auto max-w-4xl text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-vyana-green">
               Book Consultation
             </p>
 
-            <h1 className="mt-5 font-serif text-5xl leading-tight text-vyana-dark sm:text-6xl">
+            <h1 className="mt-4 font-serif text-5xl leading-tight text-vyana-dark sm:text-6xl">
               Begin your wellness journey.
             </h1>
 
-            <p className="mx-auto mt-7 max-w-2xl text-lg leading-8 text-gray-600">
+            <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600">
               Schedule an online consultation with Dr. Bhoomi Panchal, BNYS to
               discuss your wellness goals, lifestyle, and the support you are
               looking for.
@@ -34,8 +34,8 @@ export default function BookPage() {
         </section>
 
         {/* Calendly Booking */}
-        <section className="bg-white px-4 py-16 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-5xl">
+        <section className="bg-white vyana-section">
+          <div className="vyana-gutter mx-auto max-w-5xl">
             <div className="overflow-hidden rounded-[2rem] border border-vyana-sage/30 bg-white shadow-sm">
               <iframe
                 src="https://calendly.com/dr-bhoomi15/30min"
@@ -63,8 +63,8 @@ export default function BookPage() {
         </section>
 
         {/* Consultation Benefits */}
-        <section className="bg-vyana-cream py-20">
-          <div className="mx-auto max-w-6xl px-6 lg:px-8">
+        <section className="bg-vyana-cream vyana-section">
+          <div className="mx-auto max-w-7xl vyana-gutter">
             <div className="mb-12 text-center">
               <p className="text-sm font-semibold uppercase tracking-[0.25em] text-vyana-green">
                 Your Consultation
@@ -125,8 +125,8 @@ export default function BookPage() {
         </section>
 
         {/* Disclaimer */}
-        <section className="bg-white py-16">
-          <div className="mx-auto max-w-3xl px-6 text-center lg:px-8">
+        <section className="bg-white vyana-section">
+          <div className="mx-auto max-w-3xl text-center vyana-gutter">
             <p className="text-sm leading-7 text-gray-500">
               VYANA Wellness provides lifestyle and wellness guidance.
               Consultations are not a substitute for emergency medical care,

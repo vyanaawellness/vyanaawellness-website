@@ -16,17 +16,17 @@ export default function AboutPage() {
       <Header />
 
       <main>
-        <section className="bg-vyana-cream px-6 pb-24 pt-40 lg:px-8">
-          <div className="mx-auto max-w-7xl">
+        <section className="bg-vyana-cream vyana-section">
+          <div className="vyana-gutter mx-auto max-w-7xl">
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-vyana-green">
               About VYANA Wellness
             </p>
 
-            <h1 className="mt-5 max-w-4xl font-serif text-5xl leading-tight text-vyana-dark sm:text-6xl">
+            <h1 className="mt-4 max-w-4xl font-serif text-5xl leading-tight text-vyana-dark sm:text-6xl">
               Helping you build health, not simply manage symptoms.
             </h1>
 
-            <p className="mt-8 max-w-2xl text-lg leading-8 text-gray-600">
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-600">
               VYANA Wellness was created to help people understand their health,
               build sustainable habits, and take a more active role in their
               long-term wellbeing.
@@ -34,8 +34,8 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="bg-white py-24">
-          <div className="mx-auto grid max-w-7xl gap-16 px-6 lg:grid-cols-2 lg:px-8">
+        <section className="bg-white vyana-section">
+          <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-2 lg:gap-12 vyana-gutter">
             <div className="relative min-h-[520px] overflow-hidden rounded-[3rem]">
               <Image
                 src="/images/dr-bhoomi.jpeg"
@@ -68,7 +68,7 @@ export default function AboutPage() {
                 Meet Dr. Bhoomi Panchal.
               </h2>
 
-              <p className="mt-7 leading-8 text-gray-600">
+              <p className="mt-6 leading-8 text-gray-600">
                 Dr. Bhoomi Panchal has five years of experience in holistic
                 healthcare and holds a Bachelor of Naturopathy and Yogic
                 Sciences.
@@ -90,14 +90,14 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="bg-vyana-cream py-24">
-          <div className="mx-auto grid max-w-7xl gap-8 px-6 md:grid-cols-2 lg:px-8">
-            <div className="rounded-3xl bg-white p-10">
+        <section className="bg-vyana-cream vyana-section">
+          <div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-2 vyana-gutter">
+            <div className="rounded-3xl bg-white vyana-panel">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-vyana-green">
                 Our Vision
               </p>
 
-              <h2 className="mt-5 font-serif text-3xl text-vyana-dark">
+              <h2 className="mt-4 font-serif text-3xl text-vyana-dark">
                 Empowering people to take charge of their health.
               </h2>
 
@@ -107,12 +107,12 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="rounded-3xl bg-white p-10">
+            <div className="rounded-3xl bg-white vyana-panel">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-vyana-green">
                 Our Mission
               </p>
 
-              <h2 className="mt-5 font-serif text-3xl text-vyana-dark">
+              <h2 className="mt-4 font-serif text-3xl text-vyana-dark">
                 Practical guidance for healthier lives.
               </h2>
 
@@ -125,8 +125,8 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="bg-white py-24 text-center">
-          <div className="mx-auto max-w-3xl px-6">
+        <section className="bg-white text-center vyana-section">
+          <div className="mx-auto max-w-3xl vyana-gutter">
             <h2 className="font-serif text-4xl text-vyana-dark sm:text-5xl">
               Start your wellness journey.
             </h2>

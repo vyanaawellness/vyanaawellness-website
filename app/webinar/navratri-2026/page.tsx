@@ -88,8 +88,8 @@ export default function NavratriWebinarPage() {
         </section>
 
         {/* INTRODUCTION */}
-        <section className="px-5 py-16 sm:px-8 sm:py-20 lg:py-24">
-          <div className="mx-auto max-w-5xl text-center">
+        <section className="vyana-section">
+          <div className="vyana-gutter mx-auto max-w-5xl text-center">
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#4F7942] sm:text-sm">
               VYANA Wellness Presents
             </p>
@@ -104,7 +104,7 @@ export default function NavratriWebinarPage() {
 
             <div className="mx-auto mt-8 h-px w-24 bg-[#C5A25B]" />
 
-            <p className="mx-auto mt-8 max-w-3xl text-base leading-8 text-gray-700 sm:text-lg">
+            <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-gray-700 sm:text-lg">
               Navratri is a time of reflection, devotion, and renewal.
               Join Dr. Bhoomi Panchal for an educational conversation
               about approaching traditional fasting practices with
@@ -136,8 +136,8 @@ export default function NavratriWebinarPage() {
         </section>
 
         {/* EVENT DETAILS */}
-        <section className="bg-white px-5 py-14 sm:px-8 sm:py-20">
-          <div className="mx-auto max-w-6xl">
+        <section className="bg-white vyana-section">
+          <div className="vyana-gutter mx-auto max-w-7xl">
             <div className="mb-10 text-center">
               <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#4F7942]">
                 Save the Date
@@ -172,8 +172,8 @@ export default function NavratriWebinarPage() {
         </section>
 
         {/* LEARNING TOPICS */}
-        <section className="px-5 py-16 sm:px-8 sm:py-24">
-          <div className="mx-auto max-w-6xl">
+        <section className="vyana-section">
+          <div className="vyana-gutter mx-auto max-w-7xl">
             <div className="mx-auto mb-12 max-w-3xl text-center">
               <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#4F7942]">
                 The Webinar Experience
@@ -194,7 +194,7 @@ export default function NavratriWebinarPage() {
               {learningTopics.map((topic) => (
                 <article
                   key={topic.number}
-                  className="rounded-3xl border border-[#DDE8D9] bg-white p-8 shadow-sm transition hover:shadow-md sm:p-10"
+                  className="rounded-3xl border border-[#DDE8D9] bg-white vyana-panel shadow-sm transition hover:shadow-md"
                 >
                   <div className="flex items-start gap-5">
                     <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#E7EFE3] font-serif text-lg text-[#234D36]">
@@ -230,8 +230,8 @@ export default function NavratriWebinarPage() {
         </section>
 
         {/* ABOUT DR. BHOOMI */}
-        <section className="bg-[#234D36] px-5 py-16 text-white sm:px-8 sm:py-24">
-          <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2 lg:gap-20">
+        <section className="bg-[#234D36] text-white vyana-section">
+          <div className="vyana-gutter mx-auto grid max-w-7xl items-center gap-8 lg:grid-cols-2 lg:gap-12">
             <div className="relative mx-auto w-full max-w-md overflow-hidden rounded-3xl border border-white/20 bg-[#DDE8D9] shadow-2xl">
               <Image
                 src="/images/dr-bhoomi.jpeg"
@@ -248,7 +248,7 @@ export default function NavratriWebinarPage() {
                 Meet Your Webinar Host
               </p>
 
-              <h2 className="mt-5 font-serif text-4xl leading-tight sm:text-5xl">
+              <h2 className="mt-4 font-serif text-4xl leading-tight sm:text-5xl">
                 Dr. Bhoomi Panchal
               </h2>
 
@@ -258,7 +258,7 @@ export default function NavratriWebinarPage() {
 
               <div className="mt-7 h-px w-20 bg-[#C5A25B]" />
 
-              <p className="mt-7 text-base leading-8 text-white/85">
+              <p className="mt-6 text-base leading-8 text-white/85">
                 Dr. Bhoomi Panchal is the founder of VYANA Wellness
                 and holds a Bachelor of Naturopathy and Yogic Sciences
                 (BNYS). With five years of experience in holistic
@@ -289,9 +289,9 @@ export default function NavratriWebinarPage() {
         {/* REGISTRATION FORM */}
         <section
           id="register"
-          className="scroll-mt-24 bg-[#F7F4ED] px-4 py-16 sm:px-8 sm:py-24"
+          className="scroll-mt-24 bg-[#F7F4ED] vyana-section"
         >
-          <div className="mx-auto max-w-5xl">
+          <div className="vyana-gutter mx-auto max-w-5xl">
             <div className="mx-auto max-w-3xl text-center">
               <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#4F7942]">
                 Join Us This Navratri
@@ -315,7 +315,7 @@ export default function NavratriWebinarPage() {
             </div>
 
             <div className="mt-12 overflow-hidden rounded-[2rem] border border-[#DDE8D9] bg-white shadow-xl">
-              <div className="bg-[#234D36] px-8 py-8 text-center sm:px-12">
+              <div className="bg-[#234D36] vyana-panel text-center">
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#D9BD78]">
                   VYANA Wellness
                 </p>
@@ -329,7 +329,7 @@ export default function NavratriWebinarPage() {
                 </p>
               </div>
 
-              <div className="px-6 py-10 sm:px-12 sm:py-14">
+              <div className="vyana-panel">
                 <WebinarRegistrationForm />
               </div>
             </div>
@@ -337,8 +337,8 @@ export default function NavratriWebinarPage() {
         </section>
 
         {/* EDUCATIONAL DISCLAIMER */}
-        <section className="border-t border-[#E5EBDD] bg-white px-5 py-12 sm:px-8">
-          <div className="mx-auto max-w-4xl text-center">
+        <section className="border-t border-[#E5EBDD] bg-white vyana-section">
+          <div className="vyana-gutter mx-auto max-w-4xl text-center">
             <h2 className="font-serif text-2xl text-[#234D36]">
               A Note on Fasting &amp; Your Health
             </h2>

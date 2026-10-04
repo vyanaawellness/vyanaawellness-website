@@ -350,7 +350,7 @@ export default function Home() {
 
         <BotanicalBranch right />
 
-        <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-center gap-2 px-4 py-3 text-center sm:flex-row sm:flex-wrap sm:gap-x-5 sm:gap-y-2 sm:px-8 lg:min-h-[76px] lg:py-3">
+        <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-center gap-2 py-3 text-center sm:flex-row sm:flex-wrap sm:gap-x-5 sm:gap-y-2 lg:min-h-[76px] lg:py-3 vyana-gutter">
           {/* ANIMATED STAR + WEBINAR BADGE */}
           <div className="flex shrink-0 items-center gap-3">
             <AnimatedWebinarStar />

@@ -2,8 +2,8 @@ import Image from "next/image";
 
 export default function BrandBanner() {
   return (
-    <section className="bg-white py-12 sm:py-14 lg:py-16">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section className="bg-white vyana-section">
+      <div className="mx-auto max-w-7xl vyana-gutter">
         {/* VYANA Brand Banner */}
         <div className="overflow-hidden rounded-[2rem] shadow-sm">
           <Image

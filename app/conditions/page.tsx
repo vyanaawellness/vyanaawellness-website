@@ -28,17 +28,17 @@ export default function ConditionsPage() {
       <Header />
 
       <main>
-        <section className="bg-vyana-green px-6 pb-24 pt-40 text-white lg:px-8">
-          <div className="mx-auto max-w-7xl">
+        <section className="bg-vyana-green text-white vyana-section">
+          <div className="vyana-gutter mx-auto max-w-7xl">
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-vyana-sage">
               Conditions Supported
             </p>
 
-            <h1 className="mt-5 max-w-4xl font-serif text-5xl sm:text-6xl">
+            <h1 className="mt-4 max-w-4xl font-serif text-5xl sm:text-6xl">
               Lifestyle support for better long-term health.
             </h1>
 
-            <p className="mt-8 max-w-2xl text-lg leading-8 text-white/75">
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-white/75">
               Lifestyle, nutrition, sleep, stress, and movement can play an
               important role in overall wellbeing and many chronic health
               concerns.
@@ -46,8 +46,8 @@ export default function ConditionsPage() {
           </div>
         </section>
 
-        <section className="bg-white py-24">
-          <div className="mx-auto max-w-6xl px-6 lg:px-8">
+        <section className="bg-white vyana-section">
+          <div className="mx-auto max-w-7xl vyana-gutter">
             <div className="grid gap-5 sm:grid-cols-2">
               {conditions.map((condition) => (
                 <div
@@ -61,7 +61,7 @@ export default function ConditionsPage() {
               ))}
             </div>
 
-            <div className="mt-16 rounded-3xl border border-vyana-sage/40 p-8 sm:p-10">
+            <div className="mt-16 rounded-3xl border border-vyana-sage/40 vyana-panel">
               <h2 className="font-serif text-3xl text-vyana-dark">
                 An important note
               </h2>

@@ -2,10 +2,10 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-vyana-dark py-12 text-white sm:py-14 lg:py-16">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <footer className="bg-vyana-dark vyana-section text-white">
+      <div className="mx-auto max-w-7xl vyana-gutter">
         {/* Footer main content */}
-        <div className="grid gap-10 md:grid-cols-3 lg:gap-12">
+        <div className="grid gap-8 md:grid-cols-3 lg:gap-12">
           {/* Brand */}
           <div>
             <Link href="/" className="font-serif text-2xl">

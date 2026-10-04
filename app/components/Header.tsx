@@ -32,7 +32,7 @@ export default function Header() {
   return (
     <>
       <header className="sticky top-0 z-50 bg-[#234D36] shadow-sm">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 lg:px-8">
+        <div className="mx-auto flex max-w-7xl items-center justify-between py-3 vyana-gutter">
 
           {/* Logo + Brand */}
           <Link
@@ -126,7 +126,7 @@ export default function Header() {
         {menuOpen && (
           <div className="border-t border-[#F7F4ED]/15 bg-[#234D36] lg:hidden">
             <nav
-              className="mx-auto flex max-w-7xl flex-col px-5 py-5"
+              className="mx-auto flex max-w-7xl flex-col py-5 vyana-gutter"
               aria-label="Mobile navigation"
             >
               {navigation.map((item) => (

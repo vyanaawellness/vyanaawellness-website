@@ -15,9 +15,9 @@ export default function Conditions() {
   return (
     <section
       id="conditions"
-      className="bg-vyana-green py-12 text-white sm:py-14 lg:py-16"
+      className="bg-vyana-green text-white vyana-section"
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl vyana-gutter">
         {/* Section heading */}
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-vyana-sage">

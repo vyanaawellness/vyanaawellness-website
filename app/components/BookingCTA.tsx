@@ -4,16 +4,16 @@ export default function BookingCTA() {
   return (
     <section
       id="book"
-      className="bg-white py-12 sm:py-14 lg:py-16"
+      className="bg-white vyana-section"
     >
-      <div className="mx-auto max-w-5xl px-6 lg:px-8">
+      <div className="mx-auto max-w-5xl vyana-gutter">
         {/* Booking call-to-action card */}
-        <div className="rounded-[2.5rem] bg-vyana-green px-8 py-12 text-center text-white sm:px-16 sm:py-14 lg:py-16">
+        <div className="rounded-[2.5rem] bg-vyana-green vyana-panel text-center text-white">
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-vyana-sage">
             Your Journey Starts Here
           </p>
 
-          <h2 className="mt-5 font-serif text-4xl sm:text-5xl">
+          <h2 className="mt-4 font-serif text-4xl sm:text-5xl">
             Ready to restore your inner rhythm?
           </h2>
 

@@ -53,17 +53,17 @@ export default function ServicesPage() {
       <Header />
 
       <main>
-        <section className="bg-vyana-cream px-6 pb-24 pt-40 lg:px-8">
-          <div className="mx-auto max-w-7xl">
+        <section className="bg-vyana-cream vyana-section">
+          <div className="vyana-gutter mx-auto max-w-7xl">
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-vyana-green">
               Services
             </p>
 
-            <h1 className="mt-5 max-w-4xl font-serif text-5xl text-vyana-dark sm:text-6xl">
+            <h1 className="mt-4 max-w-4xl font-serif text-5xl text-vyana-dark sm:text-6xl">
               Personalized wellness support designed around you.
             </h1>
 
-            <p className="mt-8 max-w-2xl text-lg leading-8 text-gray-600">
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-600">
               Every individual is different. VYANA Wellness focuses on
               practical recommendations that fit your lifestyle, goals, and
               circumstances.
@@ -71,8 +71,8 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <section className="bg-white py-24">
-          <div className="mx-auto grid max-w-7xl gap-6 px-6 md:grid-cols-2 lg:px-8">
+        <section className="bg-white vyana-section">
+          <div className="mx-auto grid max-w-7xl gap-6 md:grid-cols-2 vyana-gutter">
             {services.map((service, index) => (
               <article
                 key={service.title}
@@ -82,7 +82,7 @@ export default function ServicesPage() {
                   {String(index + 1).padStart(2, "0")}
                 </span>
 
-                <h2 className="mt-5 font-serif text-3xl text-vyana-dark">
+                <h2 className="mt-4 font-serif text-3xl text-vyana-dark">
                   {service.title}
                 </h2>
 
@@ -94,8 +94,8 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <section className="bg-vyana-green py-24 text-center text-white">
-          <div className="mx-auto max-w-3xl px-6">
+        <section className="bg-vyana-green text-center text-white vyana-section">
+          <div className="mx-auto max-w-3xl vyana-gutter">
             <h2 className="font-serif text-4xl sm:text-5xl">
               Not sure where to begin?
             </h2>

@@ -18,8 +18,8 @@ const pillars = [
 
 export default function Pillars() {
   return (
-    <section className="bg-white py-12 sm:py-14 lg:py-16">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section className="bg-white vyana-section">
+      <div className="mx-auto max-w-7xl vyana-gutter">
         {/* Section heading */}
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-vyana-green">
@@ -42,7 +42,7 @@ export default function Pillars() {
           {pillars.map((pillar) => (
             <div
               key={pillar.number}
-              className="rounded-3xl bg-vyana-cream p-10"
+              className="rounded-3xl bg-vyana-cream vyana-panel"
             >
               <span className="text-sm font-semibold text-vyana-green">
                 {pillar.number}

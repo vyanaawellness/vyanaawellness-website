@@ -8,9 +8,9 @@ export default function Approach() {
   return (
     <section
       id="approach"
-      className="bg-vyana-cream py-12 sm:py-14 lg:py-16"
+      className="bg-vyana-cream vyana-section"
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl vyana-gutter">
         {/* Section heading */}
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-vyana-green">

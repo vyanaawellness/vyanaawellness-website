@@ -7,7 +7,7 @@ export default function Hero() {
       <div className="pointer-events-none absolute -bottom-40 -left-20 h-96 w-96 rounded-full bg-vyana-sage/20 blur-3xl" />
 
       {/* Hero container: balanced top and bottom spacing */}
-      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-12 px-6 py-12 sm:py-14 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-16">
+      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-8 lg:grid-cols-2 lg:gap-12 vyana-section vyana-gutter">
         {/* Hero Content */}
         <div className="flex flex-col justify-center">
           <p className="mb-6 text-sm font-semibold uppercase tracking-[0.25em] text-vyana-green">
@@ -21,7 +21,7 @@ export default function Hero() {
             </span>
           </h1>
 
-          <p className="mt-8 max-w-xl text-lg leading-8 text-gray-600">
+          <p className="mt-6 max-w-xl text-lg leading-8 text-gray-600">
             Personalized naturopathic and lifestyle-based wellness support to
             help you build healthier habits, prevent disease, and thrive with
             greater balance.

@@ -17,18 +17,18 @@ export default function ContactPage() {
 
       <main>
         {/* Hero */}
-        <section className="bg-vyana-cream px-6 pb-20 pt-40 lg:px-8">
-          <div className="mx-auto max-w-7xl">
+        <section className="bg-vyana-cream vyana-section">
+          <div className="vyana-gutter mx-auto max-w-7xl">
             <div className="max-w-3xl">
               <p className="text-sm font-semibold uppercase tracking-[0.25em] text-vyana-green">
                 Contact VYANA Wellness
               </p>
 
-              <h1 className="mt-5 font-serif text-5xl leading-tight text-vyana-dark sm:text-6xl">
+              <h1 className="mt-4 font-serif text-5xl leading-tight text-vyana-dark sm:text-6xl">
                 We&apos;re here to help you take the next step.
               </h1>
 
-              <p className="mt-7 max-w-2xl text-lg leading-8 text-gray-600">
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-600">
                 Have a question about consultations, services, or your wellness
                 journey? Send us a message or connect with VYANA Wellness
                 directly.
@@ -38,8 +38,8 @@ export default function ContactPage() {
         </section>
 
         {/* Contact Area */}
-        <section className="bg-white py-24">
-          <div className="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
+        <section className="bg-white vyana-section">
+          <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr] vyana-gutter">
             {/* Contact Information */}
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.25em] text-vyana-green">
@@ -120,7 +120,7 @@ export default function ContactPage() {
             </div>
 
             {/* Contact Form */}
-            <div className="rounded-[2rem] border border-vyana-sage/30 bg-vyana-cream p-6 sm:p-10">
+            <div className="rounded-[2rem] border border-vyana-sage/30 bg-vyana-cream vyana-panel">
               <p className="text-sm font-semibold uppercase tracking-[0.25em] text-vyana-green">
                 Send a message
               </p>
@@ -141,8 +141,8 @@ export default function ContactPage() {
         </section>
 
         {/* Emergency Note */}
-        <section className="bg-vyana-cream py-14">
-          <div className="mx-auto max-w-4xl px-6 text-center lg:px-8">
+        <section className="bg-vyana-cream vyana-section">
+          <div className="mx-auto max-w-4xl text-center vyana-gutter">
             <p className="text-sm leading-7 text-gray-600">
               If you are experiencing a medical emergency or require urgent
               medical attention, please contact your local emergency services or
