@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const navigation = [
@@ -14,7 +15,11 @@ const navigation = [
 ];
 
 export default function Header() {
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const isCurrentPage = (href: string) =>
+    pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
@@ -65,7 +70,8 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-sm font-medium text-[#F7F4ED] transition hover:text-[#DDB85C]"
+                aria-current={isCurrentPage(item.href) ? "page" : undefined}
+                className="vyana-nav-link relative py-2 text-sm font-medium text-[#F7F4ED] transition-colors duration-300 hover:text-[#DDB85C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#DDB85C]"
               >
                 {item.name}
               </Link>
@@ -127,8 +133,9 @@ export default function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
+                  aria-current={isCurrentPage(item.href) ? "page" : undefined}
                   onClick={() => setMenuOpen(false)}
-                  className="border-b border-[#F7F4ED]/10 py-4 text-base font-medium text-[#F7F4ED] transition hover:text-[#DDB85C]"
+                  className="vyana-nav-link relative w-fit py-4 text-base font-medium text-[#F7F4ED] transition-colors duration-300 hover:text-[#DDB85C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#DDB85C]"
                 >
                   {item.name}
                 </Link>
@@ -159,6 +166,39 @@ export default function Header() {
 
       {/* Booking button animation */}
       <style jsx global>{`
+        .vyana-nav-link::after {
+          content: "";
+          position: absolute;
+          bottom: 4px;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          border-radius: 999px;
+          background: #DDB85C;
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform 300ms ease;
+        }
+
+        .vyana-nav-link[aria-current="page"] {
+          color: #DDB85C;
+        }
+
+        .vyana-nav-link[aria-current="page"]::after {
+          transform: scaleX(1);
+          animation: vyanaNavReveal 350ms ease-out;
+        }
+
+        .vyana-nav-link:hover::after,
+        .vyana-nav-link:focus-visible::after {
+          transform: scaleX(1);
+        }
+
+        @keyframes vyanaNavReveal {
+          from { transform: scaleX(0); }
+          to { transform: scaleX(1); }
+        }
+
         @keyframes vyanaBookingGlow {
           0%,
           100% {
@@ -192,6 +232,12 @@ export default function Header() {
         }
 
         @media (prefers-reduced-motion: reduce) {
+          .vyana-nav-link,
+          .vyana-nav-link::after {
+            animation: none !important;
+            transition: none;
+          }
+
           .vyana-booking-glow {
             animation: none;
             transition: none;
