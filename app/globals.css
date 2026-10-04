@@ -292,3 +292,92 @@ h6 {
   }
 
 }
+/* =========================================================
+   SERVICES BOTANICAL HERO
+   ========================================================= */
+
+.services-botanical-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--vyana-cream);
+}
+
+.services-botanical-hero-image {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+
+  background-image: url("/images/services-hero-botanical.webp");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.services-botanical-hero-overlay {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+
+  /*
+    Maintains the botanical atmosphere while protecting
+    foreground text readability.
+  */
+  background:
+    linear-gradient(
+      90deg,
+      rgba(247, 244, 237, 0.72) 0%,
+      rgba(247, 244, 237, 0.50) 25%,
+      rgba(247, 244, 237, 0.36) 50%,
+      rgba(247, 244, 237, 0.50) 75%,
+      rgba(247, 244, 237, 0.72) 100%
+    );
+}
+
+.services-hero-copy {
+  position: relative;
+  padding-left: 2.5rem;
+}
+
+.services-hero-copy::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.2rem;
+  bottom: 0.2rem;
+  width: 1px;
+
+  background: rgba(45, 104, 69, 0.28);
+}
+
+@media (max-width: 1023px) {
+  .services-botanical-hero-image {
+    background-position: center;
+  }
+
+  .services-botanical-hero-overlay {
+    background: rgba(247, 244, 237, 0.58);
+  }
+
+  .services-hero-copy {
+    padding-left: 0;
+  }
+
+  .services-hero-copy::before {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .services-botanical-hero-image {
+    /*
+      Keep the center relatively quiet on phones so
+      foreground text remains readable.
+    */
+    background-position: 50% center;
+  }
+
+  .services-botanical-hero-overlay {
+    background: rgba(247, 244, 237, 0.70);
+  }
+}
