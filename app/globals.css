@@ -72,3 +72,223 @@ h5,
 h6 {
   font-family: var(--font-playfair), Georgia, serif;
 }
+/* =========================================================
+   VYANA HOMEPAGE VIDEO HERO
+   ========================================================= */
+
+.vyana-video-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  width: 100%;
+
+  background: var(--vyana-cream);
+
+  /*
+    Extra bottom room allows the organic transition
+    to overlap the video naturally.
+  */
+  padding-bottom: 55px;
+}
+
+
+/* =========================================================
+   REAL VIDEO BACKGROUND
+   ========================================================= */
+
+.vyana-video-hero-bg {
+  position: absolute;
+  z-index: 0;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: 60% center;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   READABILITY GRADIENT
+   ========================================================= */
+
+.vyana-video-hero-overlay {
+  position: absolute;
+  z-index: 1;
+
+  inset: 0;
+
+  pointer-events: none;
+
+  /*
+    Strong cream protection behind the headline,
+    progressively revealing the moving video toward
+    the right side.
+  */
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(247, 244, 237, 0.98) 0%,
+      rgba(247, 244, 237, 0.96) 18%,
+      rgba(247, 244, 237, 0.90) 32%,
+      rgba(247, 244, 237, 0.72) 44%,
+      rgba(247, 244, 237, 0.40) 58%,
+      rgba(247, 244, 237, 0.14) 73%,
+      rgba(247, 244, 237, 0.03) 100%
+    );
+}
+
+
+/* =========================================================
+   WARM LIGHT TREATMENT
+   ========================================================= */
+
+.vyana-video-hero-warmth {
+  position: absolute;
+  z-index: 2;
+
+  inset: 0;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at 72% 18%,
+      rgba(255, 242, 189, 0.13),
+      transparent 33%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.02),
+      rgba(247, 244, 237, 0.04)
+    );
+}
+
+
+/* =========================================================
+   ORGANIC BOTTOM TRANSITION
+   ========================================================= */
+
+.vyana-hero-organic-transition {
+  position: absolute;
+  z-index: 20;
+
+  left: 0;
+  right: 0;
+  bottom: -1px;
+
+  width: 100%;
+  height: 105px;
+
+  pointer-events: none;
+}
+
+
+.vyana-hero-organic-transition svg {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+}
+
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media (min-width: 1024px) {
+
+  .vyana-video-hero-bg {
+    /*
+      Shift video slightly toward the right so the most
+      interesting botanical movement remains visible.
+    */
+    object-position: 60% center;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1023px) {
+
+  .vyana-video-hero {
+    padding-bottom: 42px;
+  }
+
+  .vyana-video-hero-bg {
+    object-position: 63% center;
+  }
+
+  .vyana-hero-organic-transition {
+    height: 80px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+  .vyana-video-hero {
+    padding-bottom: 28px;
+  }
+
+  .vyana-video-hero-bg {
+    object-position: 67% center;
+  }
+
+  /*
+    Mobile needs stronger coverage because the text and
+    video occupy the same narrow horizontal space.
+  */
+
+  .vyana-video-hero-overlay {
+    background:
+      linear-gradient(
+        90deg,
+        rgba(247, 244, 237, 0.95) 0%,
+        rgba(247, 244, 237, 0.91) 45%,
+        rgba(247, 244, 237, 0.70) 72%,
+        rgba(247, 244, 237, 0.40) 100%
+      );
+  }
+
+  .vyana-hero-organic-transition {
+    height: 55px;
+  }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION ACCESSIBILITY
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .vyana-video-hero-bg {
+    display: none;
+  }
+
+  .vyana-video-hero {
+    background:
+      var(--vyana-cream)
+      url("/images/vyana-hero-botanical.png")
+      center / cover
+      no-repeat;
+  }
+
+}

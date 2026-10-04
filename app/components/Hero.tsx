@@ -1,27 +1,59 @@
 export default function Hero() {
   return (
-    <section className="relative flex items-center overflow-hidden bg-vyana-cream">
-      {/* Decorative background */}
-      <div className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-vyana-sage/30 blur-3xl" />
+    <section className="vyana-video-hero">
+      {/* =====================================================
+          REAL BOTANICAL VIDEO BACKGROUND
+         ===================================================== */}
+      <video
+        className="vyana-video-hero-bg"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        poster="/images/vyana-hero-botanical.png"
+        aria-hidden="true"
+      >
+        <source
+          src="/videos/vyana-hero-botanical.mp4"
+          type="video/mp4"
+        />
+      </video>
 
-      <div className="pointer-events-none absolute -bottom-40 -left-20 h-96 w-96 rounded-full bg-vyana-sage/20 blur-3xl" />
+      {/* =====================================================
+          LEFT-SIDE READABILITY GRADIENT
+         ===================================================== */}
+      <div
+        className="vyana-video-hero-overlay"
+        aria-hidden="true"
+      />
 
-      {/* Hero container: balanced top and bottom spacing */}
-      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-8 lg:grid-cols-2 lg:gap-12 vyana-section vyana-gutter">
-        {/* Hero Content */}
-        <div className="flex flex-col justify-center">
+      {/* =====================================================
+          SUBTLE WARM VYANA LIGHT
+         ===================================================== */}
+      <div
+        className="vyana-video-hero-warmth"
+        aria-hidden="true"
+      />
+
+      {/* =====================================================
+          HERO CONTENT
+         ===================================================== */}
+      <div className="relative z-10 mx-auto w-full max-w-7xl vyana-section vyana-gutter">
+        <div className="max-w-[650px]">
           <p className="mb-6 text-sm font-semibold uppercase tracking-[0.25em] text-vyana-green">
             Holistic Wellness · Sustainable Health
           </p>
 
-          <h1 className="max-w-3xl font-serif text-5xl leading-[1.08] text-vyana-dark sm:text-6xl lg:text-7xl">
+          <h1 className="font-serif text-5xl leading-[1.08] text-vyana-dark sm:text-6xl lg:text-7xl">
             Restore Your
+
             <span className="block text-vyana-green">
               Inner Rhythm.
             </span>
           </h1>
 
-          <p className="mt-6 max-w-xl text-lg leading-8 text-gray-600">
+          <p className="mt-6 max-w-xl text-lg leading-8 text-gray-700">
             Personalized naturopathic and lifestyle-based wellness support to
             help you build healthier habits, prevent disease, and thrive with
             greater balance.
@@ -30,38 +62,46 @@ export default function Hero() {
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
             <a
               href="/book"
-              className="rounded-full bg-vyana-green px-7 py-4 text-center text-sm font-semibold text-white transition hover:opacity-90"
+              className="rounded-full bg-vyana-green px-7 py-4 text-center text-sm font-semibold text-white shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-md"
             >
               Book a Consultation
             </a>
 
             <a
               href="#about"
-              className="rounded-full border border-vyana-green px-7 py-4 text-center text-sm font-semibold text-vyana-green transition hover:bg-vyana-green hover:text-white"
+              className="rounded-full border border-vyana-green bg-vyana-cream/60 px-7 py-4 text-center text-sm font-semibold text-vyana-green backdrop-blur-sm transition duration-300 hover:bg-vyana-green hover:text-white"
             >
               Discover VYANA
             </a>
           </div>
         </div>
+      </div>
 
-        {/* Hero Visual */}
-        <div className="flex items-center justify-center">
-          <div className="relative flex aspect-square w-full max-w-lg items-center justify-center rounded-[3rem] bg-vyana-sage/30 p-8 sm:p-12">
-            <div className="flex h-full w-full items-center justify-center rounded-[2.5rem] border border-white/70 bg-white/50">
-              <div className="text-center">
-                <div className="mx-auto mb-6 h-20 w-20 rounded-full bg-vyana-green/15" />
-
-                <p className="font-serif text-3xl text-vyana-dark">
-                  A healthier life,
-                </p>
-
-                <p className="mt-2 font-serif text-3xl italic text-vyana-green">
-                  naturally.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* =====================================================
+          ORGANIC TRANSITION INTO NEXT SECTION
+         ===================================================== */}
+      <div
+        className="vyana-hero-organic-transition"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 1440 150"
+          preserveAspectRatio="none"
+          className="h-full w-full"
+        >
+          <path
+            d="
+              M0,100
+              C160,125 310,140 465,112
+              C620,84 720,34 885,47
+              C1045,60 1150,119 1440,72
+              L1440,150
+              L0,150
+              Z
+            "
+            fill="white"
+          />
+        </svg>
       </div>
     </section>
   );
